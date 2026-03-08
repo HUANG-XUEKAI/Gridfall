@@ -35,7 +35,6 @@ public class BoardResolvedEvent
 public class HPChangedEvent
 {
     public int currentHP;
-    public int maxHP;
     public int delta;
 }
 
@@ -47,7 +46,7 @@ public class SpecialEffectEvent
 
 public class GameOverEvent
 {
-    public int finalHP;
+    public int finalScore;
 }
 
 public class ScoreChangedEvent

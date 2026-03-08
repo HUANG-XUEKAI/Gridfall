@@ -3,8 +3,9 @@ using UnityEngine;
 public class ScoreSystem : MonoBehaviour
 {
     [SerializeField] private ScoreConfig scoreConfig;
-
-    public int CurrentScore { get; private set; }
+    
+    private MatchDataCenter MDC => MatchDataCenter.Instance;
+    private AccountDataCenter ADC => AccountDataCenter.Instance;
 
     private void OnEnable()
     {
@@ -17,13 +18,7 @@ public class ScoreSystem : MonoBehaviour
         GameEvents.BoardResolved -= OnBoardResolved;
         GameEvents.GameOver -= OnGameOver;
     }
-
-    public void ResetScore()
-    {
-        CurrentScore = 0;
-        RaiseScoreChanged(0, "Reset");
-    }
-
+    
     private void OnBoardResolved(BoardResolvedEvent e)
     {
         if (scoreConfig == null) return;
@@ -33,24 +28,21 @@ public class ScoreSystem : MonoBehaviour
         int multiplier = scoreConfig.GetPatternMultiplier(e.pattern);
         if (multiplier <= 0) return;
 
-        int add = e.clearedCellCount * scoreConfig.baseCellScore * multiplier;
+        int amount = 0; // 待改
+        // TODO : 计分逻辑改成：每个格子BasicBlock的基础分 * multiplier
 
-        CurrentScore += add;
-        RaiseScoreChanged(add, $"{e.pattern} x {e.clearedCellCount}");
+        MDC.AddScore(amount, "消除得分（Temp）");
     }
 
     private void OnGameOver(GameOverEvent e)
     {
-        Debug.Log($"[ScoreSystem] Final Score = {CurrentScore}");
-    }
-
-    private void RaiseScoreChanged(int delta, string reason)
-    {
-        GameEvents.RaiseScoreChanged(new ScoreChangedEvent
+        if (MDC.CurrentMatch.currentScore > ADC.Profile.bestScore)
         {
-            currentScore = CurrentScore,
-            delta = delta,
-            reason = reason
-        });
+            ADC.Profile.bestScore = MDC.CurrentMatch.currentScore;
+            Debug.Log($"新纪录：{ADC.Profile.bestScore}");
+        }
+
+        ADC.Progress.totalPlayCount++;
+        Debug.Log("Game Over!");
     }
 }

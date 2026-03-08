@@ -27,7 +27,7 @@ public class EventDebugListener : MonoBehaviour
 
     private void OnHPChanged(HPChangedEvent e)
     {
-        Debug.Log($"[Event] HPChanged: {e.currentHP}/{e.maxHP}, delta={e.delta}");
+        Debug.Log($"[Event] HPChanged: {e.currentHP}, delta={e.delta}");
     }
 
     private void OnEffectExecuted(SpecialEffectEvent e)
@@ -37,7 +37,7 @@ public class EventDebugListener : MonoBehaviour
 
     private void OnGameOver(GameOverEvent e)
     {
-        Debug.Log($"[Event] GameOver: finalHP={e.finalHP}");
+        Debug.Log($"[Event] GameOver: finalScore={e.finalScore}");
     }
 
     private void OnBoardResolved(BoardResolvedEvent e)

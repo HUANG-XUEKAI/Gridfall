@@ -7,9 +7,7 @@ public class HealEffect : CardEffect
 
     public override void Execute(CardEffectContext context)
     {
-        if (context?.gameManager == null) 
-            return;
-        context.gameManager.AddHP(healAmount);
+        MatchDataCenter.Instance.AddHP(healAmount);
         Debug.Log($"HealEffect: +{healAmount} HP");
     }
 }

@@ -12,7 +12,6 @@ public class HandManager : MonoBehaviour
     [SerializeField] private CardView cardPrefab;
     [SerializeField] private CardDatabase cardDB;
     [SerializeField] private BoardManager boardMG;
-    [SerializeField] private GameManager gameMG;
 
     [Header("UI")]
     [SerializeField] private Button playButton; // 新增：出牌按钮
@@ -249,7 +248,7 @@ public class HandManager : MonoBehaviour
         var effectContext = new CardEffectContext
         {
             board = boardMG,
-            gameManager = gameMG,
+            //gameManager = gameMG,
             targetCell = targetCell
         };
 

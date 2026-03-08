@@ -468,6 +468,51 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 310510734}
   m_CullTransparentMesh: 1
+--- !u!1 &310941915
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 7
+  m_Component:
+  - component: {fileID: 310941916}
+  - component: {fileID: 310941917}
+  m_Layer: 0
+  m_HasEditorInfo: 1
+  m_Name: PlayerDataCenter
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &310941916
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 310941915}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1832220429}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &310941917
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 310941915}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7600fc99e83ff6c4a887c636a06c9b37, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &333205563
 GameObject:
   m_ObjectHideFlags: 0
@@ -1278,7 +1323,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   spawnInterval: 2
   spawnPerTick: 4
-  defaultHP: 5
   mainMenu: {fileID: 1947363001}
   gameInterface: {fileID: 1822598839}
   gameOverPanel: {fileID: 1497709125}
@@ -1335,7 +1379,6 @@ MonoBehaviour:
   cardPrefab: {fileID: 3415135771456702706, guid: a5033c53e1ada69429d94ae43c8aa638, type: 3}
   cardDB: {fileID: 11400000, guid: 9fe06d550e8e38d49b13d08905541ea8, type: 2}
   boardMG: {fileID: 833476136}
-  gameMG: {fileID: 619716824}
   playButton: {fileID: 310510736}
   playBtnText: {fileID: 468885046}
   lineModeButton: {fileID: 1181532063}
@@ -1552,7 +1595,7 @@ GameObject:
   - component: {fileID: 850316334}
   m_Layer: 0
   m_HasEditorInfo: 1
-  m_Name: ScoreSystem
+  m_Name: ScoreBoard
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3059,6 +3102,39 @@ CanvasGroup:
   m_Interactable: 0
   m_BlocksRaycasts: 0
   m_IgnoreParentGroups: 0
+--- !u!1 &1832220428
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 7
+  m_Component:
+  - component: {fileID: 1832220429}
+  m_Layer: 0
+  m_HasEditorInfo: 1
+  m_Name: Systems
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1832220429
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1832220428}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 310941916}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1947362999
 GameObject:
   m_ObjectHideFlags: 0
@@ -3199,3 +3275,4 @@ SceneRoots:
   - {fileID: 448299113}
   - {fileID: 1160423791}
   - {fileID: 850316335}
+  - {fileID: 1832220429}

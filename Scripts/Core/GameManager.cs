@@ -7,8 +7,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private float spawnInterval = 1.5f;
     [SerializeField] private int spawnPerTick = 4;
     
-    [Header("HP")]
-    [SerializeField] private int defaultHP = 5;
+    //[SerializeField] private int defaultHP = 5;
 
     [Header("Refs")]
     [SerializeField] private CanvasGroup mainMenu;
@@ -19,15 +18,13 @@ public class GameManager : MonoBehaviour
     [SerializeField] private BoardManager boardManager;
     [SerializeField] private ScoreSystem scoreSystem;
     
-    private int hp;
-    private bool gameOver;
-    
+    private MatchDataCenter MDC => MatchDataCenter.Instance;
     private Coroutine spawnRoutine;
 
     void Awake()
     {
         InitializeUI();
-        ResetGame();
+        //ResetGame();
         StopSpawning();
     }
 
@@ -40,15 +37,13 @@ public class GameManager : MonoBehaviour
 
     public void StartGame()
     {
-        ResetGame();
+        MDC.StartNewMatch();
         
         boardManager.BuildBoard();
         boardManager.ClearAllShapes();
         boardManager.ClearAllHighlights();
         
         handManager.ResetHand();
-        
-        scoreSystem.ResetScore();
         
         HideGUI(mainMenu);
         HideGUI(gameOverPanel);
@@ -57,7 +52,8 @@ public class GameManager : MonoBehaviour
         StartSpawning();
     }
     
-    public void ResetGame()
+    //逐步弱化，最后删掉。
+    /*public void ResetGame() 
     {
         hp = defaultHP;
         gameOver = false;
@@ -68,7 +64,7 @@ public class GameManager : MonoBehaviour
             maxHP = defaultHP,
             delta = 0
         });
-    }
+    }*/
 
     public void BackMainMenu()
     {
@@ -78,7 +74,7 @@ public class GameManager : MonoBehaviour
         boardManager.DestroyAllCells();
         handManager.ClearHand();
         
-        ResetGame();
+        //ResetGame();
         
         ShowGUI(mainMenu);
         HideGUI(gameInterface);
@@ -105,7 +101,7 @@ public class GameManager : MonoBehaviour
     {
         var wait = new WaitForSeconds(spawnInterval);
 
-        while (!gameOver)
+        while (MDC.CurrentMatch.isGaming)
         {
             yield return wait;
 
@@ -121,75 +117,14 @@ public class GameManager : MonoBehaviour
                     clearedLineCount = damage
                 });
 
-                TakeDamage(damage);
+                MDC.TakeDamage(damage);
 
-                if (gameOver)
+                if (!MDC.CurrentMatch.isGaming)
                     yield break;
             }
         }
     }
     
-    private void GameOver()
-    {
-        gameOver = true;
-        ShowGUI(gameOverPanel);
-        StopSpawning();
-
-        GameEvents.RaiseGameOver(new GameOverEvent
-        {
-            finalHP = hp
-        });
-
-        Debug.Log("Game Over!");
-    }
-
-    #region 特殊效果
-    public void AddHP(int amount)
-    {
-        if (amount <= 0) return;
-        
-        int oldHP = hp;
-        hp = Mathf.Min(defaultHP, hp + amount);
-
-        GameEvents.RaiseHPChanged(new HPChangedEvent
-        {
-            currentHP = hp,
-            maxHP = defaultHP,
-            delta = hp - oldHP
-        });
-    }
-
-    public void TakeDamage(int amount)
-    {
-        if (amount <= 0 || gameOver) return;
-
-        int oldHP = hp;
-        hp -= amount;
-
-        if (hp <= 0)
-        {
-            hp = 0;
-
-            GameEvents.RaiseHPChanged(new HPChangedEvent
-            {
-                currentHP = hp,
-                maxHP = defaultHP,
-                delta = hp - oldHP
-            });
-
-            GameOver();
-            return;
-        }
-
-        GameEvents.RaiseHPChanged(new HPChangedEvent
-        {
-            currentHP = hp,
-            maxHP = defaultHP,
-            delta = hp - oldHP
-        });
-    }
-    #endregion
-
     public static void ShowGUI(CanvasGroup gui)
     {
         if (gui != null && !IsVisible(gui))

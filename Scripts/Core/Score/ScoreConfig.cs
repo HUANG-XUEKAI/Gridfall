@@ -3,8 +3,8 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Gridfall/Score/Score Config")]
 public class ScoreConfig : ScriptableObject
 {
-    [Header("Base Score")]
-    public int baseCellScore = 1;
+    /*[Header("Base Score")]
+    public int baseCellScore = 1;*/
 
     [Header("Pattern Multiplier")]
     public int singleMultiplier = 1;
