@@ -24,14 +24,13 @@ public class ScoreSystem : MonoBehaviour
         if (scoreConfig == null) return;
         if (e.pattern == CardPattern.None) return;
         if (e.clearedCellCount <= 0) return;
+        if (e.clearedBaseScore <= 0) return;
 
         int multiplier = scoreConfig.GetPatternMultiplier(e.pattern);
         if (multiplier <= 0) return;
 
-        int amount = 0; // 待改
-        // TODO : 计分逻辑改成：每个格子BasicBlock的基础分 * multiplier
-
-        MDC.AddScore(amount, "消除得分（Temp）");
+        int amount = e.clearedBaseScore * multiplier;
+        MDC.AddScore(amount, $"消除得分：{e.clearedBaseScore} x {multiplier}");
     }
 
     private void OnGameOver(GameOverEvent e)

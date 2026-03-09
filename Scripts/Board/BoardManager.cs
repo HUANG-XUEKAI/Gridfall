@@ -178,22 +178,25 @@ public class BoardManager : MonoBehaviour
         return fullRows.Count + fullCols.Count;
     }
     
-    public int ClearAllMatching(BasicPattern pattern)
+    public Vector2Int ClearAllMatching(BasicPattern pattern)
     {
-        if (pattern == null) return 0;
+        if (pattern == null) return new Vector2Int(0, 0);
+        
         int cleared = 0;
-
+        int clearedBaseScore = 0;
+        
         for (int y = 0; y < height; y++)
         for (int x = 0; x < width; x++)
         {
             var block = blocks[x, y];
             if (block != null && block.pattern == pattern)
             {
+                clearedBaseScore += block.baseScore;
                 Clear(x, y);
                 cleared++;
             }
         }
-        return cleared;
+        return new Vector2Int(cleared, clearedBaseScore);
     }
     
     public void ClearAllHighlights()

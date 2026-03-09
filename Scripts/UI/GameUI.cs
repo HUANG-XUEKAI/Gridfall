@@ -21,6 +21,7 @@ public class GameUI : MonoBehaviour
     private void Start()
     {
         RefreshScoreText(0);
+        RefreshHPText(MatchData.DefaultHP);
     }
 
     private void OnHPChanged(HPChangedEvent e)

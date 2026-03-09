@@ -30,6 +30,7 @@ public class BoardResolvedEvent
     public CardPattern pattern;
     public int clearedCellCount;
     public int clearedLineCount;
+    public int clearedBaseScore;
 }
 
 public class HPChangedEvent

@@ -134,7 +134,8 @@ public class HandManager : MonoBehaviour
                     {
                         pattern = currentPattern,
                         clearedCellCount = execResult.clearedCellCount,
-                        clearedLineCount = 0
+                        clearedLineCount = 0,
+                        clearedBaseScore = execResult.clearedBaseScore
                     });
 
                     GameEvents.RaiseCardPlayed(new CardPlayedEvent
@@ -412,7 +413,6 @@ public class HandManager : MonoBehaviour
         if (x < 0 || y < 0)
         {
             lastAimCell = new Vector2Int(-999, -999); // 让下次拖回棋盘能立刻刷新预览
-            // board.ClearAllHighlights(); // 如果你在 Catcher 里已经清了，这里可不写
             return;
         }
 
@@ -430,7 +430,8 @@ public class HandManager : MonoBehaviour
             {
                 pattern = currentPattern,
                 clearedCellCount = execResult.clearedCellCount,
-                clearedLineCount = 0
+                clearedLineCount = 0,
+                clearedBaseScore = execResult.clearedBaseScore
             });
 
             AfterSuccessfulPlay(x, y);

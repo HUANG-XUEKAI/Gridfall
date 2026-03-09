@@ -9,15 +9,18 @@ public class SinglePlayStrategy : BasePlayStrategy
         int y,
         bool isRowMode)
     {
-        var targetBlock = board.Get(x, y);
+        if (pattern == null) return PlayExecutionResult.Fail();
         
+        var targetBlock = board.Get(x, y);
         if (targetBlock == null) 
             return PlayExecutionResult.Fail();
         if (targetBlock.pattern != pattern) 
             return PlayExecutionResult.Fail();
 
+        int clearedBaseScore = targetBlock.baseScore;
         board.Clear(x, y);
-        return PlayExecutionResult.Success(1);
+        
+        return PlayExecutionResult.Success(1, clearedBaseScore);
     }
 }
 
@@ -33,6 +36,7 @@ public class PairPlayStrategy : BasePlayStrategy
         if (pattern == null) return PlayExecutionResult.Fail();
 
         int cleared = 0;
+        int clearedBaseScore = 0;
         BasicBlock targetBlock;
 
         if (isRowMode)
@@ -42,6 +46,7 @@ public class PairPlayStrategy : BasePlayStrategy
                 targetBlock = board.Get(xx, y);
                 if (targetBlock != null && targetBlock.pattern == pattern)
                 {
+                    clearedBaseScore += targetBlock.baseScore;
                     board.Clear(xx, y);
                     cleared++;
                 }
@@ -54,6 +59,7 @@ public class PairPlayStrategy : BasePlayStrategy
                 targetBlock = board.Get(x, yy);
                 if (targetBlock != null && targetBlock.pattern == pattern)
                 {
+                    clearedBaseScore += targetBlock.baseScore;
                     board.Clear(x, yy);
                     cleared++;
                 }
@@ -61,7 +67,7 @@ public class PairPlayStrategy : BasePlayStrategy
         }
 
         return cleared > 0
-            ? PlayExecutionResult.Success(cleared)
+            ? PlayExecutionResult.Success(cleared, clearedBaseScore)
             : PlayExecutionResult.Fail();
     }
 }
@@ -85,6 +91,7 @@ public class TriplePlayStrategy : BasePlayStrategy
         if (pattern == null) return PlayExecutionResult.Fail();
 
         int cleared = 0;
+        int clearedBaseScore = 0;
         BasicBlock targetBlock;
 
         if (isRowMode)
@@ -97,6 +104,7 @@ public class TriplePlayStrategy : BasePlayStrategy
                 targetBlock = board.Get(xx, yy);
                 if (targetBlock != null && targetBlock.pattern == pattern)
                 {
+                    clearedBaseScore += targetBlock.baseScore;
                     board.Clear(xx, yy);
                     cleared++;
                 }
@@ -112,6 +120,7 @@ public class TriplePlayStrategy : BasePlayStrategy
                 targetBlock = board.Get(xx, yy);
                 if (targetBlock != null && targetBlock.pattern == pattern)
                 {
+                    clearedBaseScore += targetBlock.baseScore;
                     board.Clear(xx, yy);
                     cleared++;
                 }
@@ -119,7 +128,7 @@ public class TriplePlayStrategy : BasePlayStrategy
         }
 
         return cleared > 0
-            ? PlayExecutionResult.Success(cleared)
+            ? PlayExecutionResult.Success(cleared, clearedBaseScore)
             : PlayExecutionResult.Fail();
     }
 }
@@ -133,9 +142,11 @@ public class QuadPlayStrategy : BasePlayStrategy
         int y,
         bool isRowMode)
     {
-        int cleared = board.ClearAllMatching(pattern);
+        Vector2Int result = board.ClearAllMatching(pattern);
+        int cleared = result.x;
+        int clearedBaseScore = result.y;
         return cleared > 0
-            ? PlayExecutionResult.Success(cleared)
+            ? PlayExecutionResult.Success(cleared, clearedBaseScore)
             : PlayExecutionResult.Fail();
     }
 }
@@ -152,20 +163,24 @@ public class RainbowPlayStrategy : BasePlayStrategy
         int startX = Mathf.Clamp(x - 3, 0, board.Width - 4);
         int startY = Mathf.Clamp(y - 3, 0, board.Height - 4);
 
+        int clearedBaseScore = 0;
         int cleared = 0;
+        BasicBlock targetBlock;
 
         for (int yy = startY; yy < startY + 4; yy++)
         for (int xx = startX; xx < startX + 4; xx++)
         {
-            if (board.Get(xx, yy) != null)
+            targetBlock = board.Get(xx, yy);
+            if (targetBlock != null)
             {
+                clearedBaseScore += targetBlock.baseScore;
                 board.Clear(xx, yy);
                 cleared++;
             }
         }
 
         return cleared > 0
-            ? PlayExecutionResult.Success(cleared)
+            ? PlayExecutionResult.Success(cleared, clearedBaseScore)
             : PlayExecutionResult.Fail();
     }
 }
