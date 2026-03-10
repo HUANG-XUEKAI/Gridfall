@@ -17,14 +17,21 @@ public class MatchDataCenter : MonoBehaviour
         Instance = this;
     }
     
-    public void StartNewMatch()
+    public void CreatNewMatchData()
     {
         CurrentMatch = new MatchData
         {
             currentHP = MatchData.DefaultHP,
             currentScore = 0,
-            isGaming = true
+            isGaming = false
         };
+    }
+
+    public void StartMatch()
+    {
+        CurrentMatch.isGaming = true;
+        
+        GameEvents.RaiseGameStared(new GameStartedEvent());
     }
 
     public void EndMatch()

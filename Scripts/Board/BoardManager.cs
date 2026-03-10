@@ -62,6 +62,23 @@ public class BoardManager : MonoBehaviour
         
         inputCatcher.transform.SetAsLastSibling();
     }
+    
+    public void DestroyAllCells()
+    {
+        if (cells != null)
+        {
+            for (int y = 0; y < height; y++)
+            for (int x = 0; x < width; x++)
+            {
+                if (cells[x, y] != null)
+                    Destroy(cells[x, y].gameObject);
+            }
+        }
+
+        // 清空数据引用，表示“棋盘未构建”
+        cells = null;
+        blocks = null;
+    }
 
     public bool IsEmpty(int x, int y) => blocks[x, y] == null;
 
@@ -133,23 +150,6 @@ public class BoardManager : MonoBehaviour
         for (int y = 0; y < height; y++)
         for (int x = 0; x < width; x++)
             Clear(x, y); // 你已有 Clear(x,y) 会同步把 view 清空
-    }
-    
-    public void DestroyAllCells()
-    {
-        if (cells != null)
-        {
-            for (int y = 0; y < height; y++)
-            for (int x = 0; x < width; x++)
-            {
-                if (cells[x, y] != null)
-                    Destroy(cells[x, y].gameObject);
-            }
-        }
-
-        // 清空数据引用，表示“棋盘未构建”
-        cells = null;
-        blocks = null;
     }
 
     public List<Vector2Int> GetAllEmptyCells()

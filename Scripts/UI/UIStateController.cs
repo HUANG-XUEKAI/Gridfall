@@ -4,6 +4,7 @@ public class UIStateController : MonoBehaviour
 {
     [Header("Panels")]
     [SerializeField] private CanvasGroup mainMenu;
+    [SerializeField] private CanvasGroup preparePanel;
     [SerializeField] private CanvasGroup gameInterface;
     [SerializeField] private CanvasGroup gameOverPanel;
 
@@ -36,22 +37,32 @@ public class UIStateController : MonoBehaviour
         switch (state)
         {
             case GameFlowState.MainMenu:
+            {
                 Show(mainMenu);
                 break;
-            
+            }
+            case GameFlowState.Prepare:
+            {
+                Show(preparePanel);
+                break;
+            }
             case GameFlowState.GamePlay:
+            {
                 Show(gameInterface);
                 break;
-
+            }
             case GameFlowState.GameOver:
+            {
                 Show(gameOverPanel);
                 break;
+            }
         }
     }
 
     private void HideAll()
     {
         Hide(mainMenu);
+        Hide(preparePanel);
         Hide(gameInterface);
         Hide(gameOverPanel);
     }

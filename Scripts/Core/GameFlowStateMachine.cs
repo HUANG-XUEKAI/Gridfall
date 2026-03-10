@@ -23,11 +23,43 @@ public class GameFlowStateMachine : MonoBehaviour
         }
 
         Instance = this;
+        
+        if (handManager == null)
+            handManager = FindFirstObjectByType<HandManager>();
+
+        if (boardManager == null)
+            boardManager = FindFirstObjectByType<BoardManager>();
+
+        if (handManager == null || boardManager == null)
+        {
+            Debug.LogError("[GameFlowStateMachine] Missing HandManager or BoardManager in scene.");
+#if UNITY_EDITOR
+            UnityEditor.EditorApplication.isPlaying = false;
+#else
+        Application.Quit();
+#endif
+            return;
+        }
     }
 
     private void Start()
     {
         RequestBackMainMenu();
+    }
+
+    private void OnEnable()
+    {
+        GameEvents.GameOver += OnGameOver;
+    }
+
+    private void OnDisable()
+    {
+        GameEvents.GameOver -= OnGameOver;
+    }
+
+    private void OnGameOver(GameOverEvent e)
+    {
+        ChangeState(GameFlowState.GameOver);
     }
 
     public void ChangeState(GameFlowState newState)
@@ -87,20 +119,21 @@ public class GameFlowStateMachine : MonoBehaviour
     
     private void EnterMainMenu()
     {
-        
+        boardManager.DestroyAllCells();
     }
 
     private void EnterPrepare()
     {
-        
+        MDC.CreatNewMatchData();
     }
     
     private void EnterGamePlay()
     {
-        MDC.StartNewMatch();
-        handManager.ResetHand();
+        MDC.StartMatch();
         boardManager.BuildBoard();
+        handManager.ResetHand();
         boardManager.StartSpawning();
+        boardManager.ClearAllHighlights();
     }
     
     private void EnterGameOver()
@@ -147,16 +180,19 @@ public class GameFlowStateMachine : MonoBehaviour
 
     private void ExitGamePlay()
     {
-        
+        boardManager.ClearAllHighlights();
+        boardManager.StopSpawning();
     }
     
     private void ExitGameOver()
     {
-        
+        boardManager.ClearAllBlocks();
+        handManager.ResetHand();
     }
 
     public bool IsInState(GameFlowState state) => CurrentState == state;
     
+    public void RequestPrepareGame() => ChangeState(GameFlowState.Prepare);
     public void RequestStartGame() => ChangeState(GameFlowState.GamePlay);
     public void RequestBackMainMenu() => ChangeState(GameFlowState.MainMenu);
 }

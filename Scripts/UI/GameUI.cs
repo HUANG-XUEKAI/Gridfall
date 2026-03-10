@@ -10,18 +10,26 @@ public class GameUI : MonoBehaviour
     {
         GameEvents.HPChanged += OnHPChanged;
         GameEvents.ScoreChanged += OnScoreChanged;
+        GameEvents.GameStarted += OnGameStarted;
     }
 
     private void OnDisable()
     {
         GameEvents.HPChanged -= OnHPChanged;
         GameEvents.ScoreChanged -= OnScoreChanged;
+        GameEvents.GameStarted -= OnGameStarted;
     }
 
     private void Start()
     {
         RefreshScoreText(0);
         RefreshHPText(MatchData.DefaultHP);
+    }
+
+    private void OnGameStarted(GameStartedEvent e)
+    {
+        RefreshHPText(e.defaultHP);
+        RefreshScoreText(e.defaultScore);
     }
 
     private void OnHPChanged(HPChangedEvent e)
