@@ -195,16 +195,14 @@ public class HandManager : MonoBehaviour
         activePattern = null;
         aimMode = AimMode.None;
         currentPattern = CardPattern.None;
-
-        // 销毁所有卡牌对象
+        
         foreach (var c in cards)
         {
             if (c != null) Destroy(c.gameObject);
         }
-
         cards.Clear();
         selectedCards.Clear();
-
+        
         currentPlayContext = null;
         lastAimCell = new Vector2Int(-999, -999);
         previewCells.Clear();

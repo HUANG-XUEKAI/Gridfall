@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -7,6 +8,10 @@ public class BoardManager : MonoBehaviour
     [Header("Size")]
     [SerializeField] private int width = 8;
     [SerializeField] private int height = 8;
+    
+    [Header("Spawn Rule")]
+    [SerializeField] private float spawnInterval = 1.5f;
+    [SerializeField] private int spawnPerTick = 4;
 
     [Header("Refs")]
     [SerializeField] private Transform boardRoot; // GridLayoutGroup 挂这
@@ -17,7 +22,9 @@ public class BoardManager : MonoBehaviour
     [SerializeField] private BlockDatabase blockDB;
 
     private BasicBlock[,] blocks;
-    private CellView[,] views;
+    private CellView[,] cells;
+    private Coroutine spawnRoutine;
+    private MatchDataCenter MDC => MatchDataCenter.Instance;
 
     public int Width => width;
     public int Height => height;
@@ -37,11 +44,11 @@ public class BoardManager : MonoBehaviour
     
     public void BuildBoard()
     {
-        if (views != null && blocks != null)
+        if (cells != null && blocks != null)
             return;
         
         blocks = new BasicBlock[width, height];
-        views = new CellView[width, height];
+        cells = new CellView[width, height];
         
         for (int y = 0; y < height; y++)
         for (int x = 0; x < width; x++)
@@ -49,7 +56,7 @@ public class BoardManager : MonoBehaviour
             var cell = Instantiate(cellPrefab, boardRoot);
             cell.Init(x, y);
             
-            views[x, y] = cell;
+            cells[x, y] = cell;
             blocks[x, y] = null;
         }
         
@@ -65,19 +72,63 @@ public class BoardManager : MonoBehaviour
         if (!IsEmpty(x, y) || block == null) 
             return false;
         blocks[x, y] = block;
-        views[x, y].SetBlock(block);
+        cells[x, y].SetBlock(block);
         return true;
+    }
+    
+    public void StartSpawning()
+    {
+        if (spawnRoutine != null) 
+            return; // 已在跑
+        spawnRoutine = StartCoroutine(SpawnLoop());
+    }
+
+    public void StopSpawning()
+    {
+        if (spawnRoutine != null)
+        {
+            StopCoroutine(spawnRoutine);
+            spawnRoutine = null;
+        }
+    }
+
+    private IEnumerator SpawnLoop()
+    {
+        var wait = new WaitForSeconds(spawnInterval);
+
+        while (MDC.CurrentMatch.isGaming)
+        {
+            yield return wait;
+
+            SpawnRandom(spawnPerTick);
+
+            int damage = ResolveFullLinesAndClear();
+            if (damage > 0)
+            {
+                GameEvents.RaiseBoardResolved(new BoardResolvedEvent
+                {
+                    pattern = CardPattern.None,
+                    clearedCellCount = 0,
+                    clearedLineCount = damage
+                });
+
+                MDC.TakeDamage(damage);
+
+                if (!MDC.CurrentMatch.isGaming)
+                    yield break;
+            }
+        }
     }
 
     public void Clear(int x, int y)
     {
         blocks[x, y] = null;
-        views[x, y].SetEmpty();
+        cells[x, y].SetEmpty();
     }
     
-    public void ClearAllShapes()
+    public void ClearAllBlocks()
     {
-        if (blocks == null || views == null) return;
+        if (blocks == null || cells == null) return;
 
         for (int y = 0; y < height; y++)
         for (int x = 0; x < width; x++)
@@ -86,18 +137,18 @@ public class BoardManager : MonoBehaviour
     
     public void DestroyAllCells()
     {
-        if (views != null)
+        if (cells != null)
         {
             for (int y = 0; y < height; y++)
             for (int x = 0; x < width; x++)
             {
-                if (views[x, y] != null)
-                    Destroy(views[x, y].gameObject);
+                if (cells[x, y] != null)
+                    Destroy(cells[x, y].gameObject);
             }
         }
 
         // 清空数据引用，表示“棋盘未构建”
-        views = null;
+        cells = null;
         blocks = null;
     }
 
@@ -201,17 +252,17 @@ public class BoardManager : MonoBehaviour
     
     public void ClearAllHighlights()
     {
-        if (views == null) return;
+        if (cells == null) return;
         
         for (int y = 0; y < height; y++)
         for (int x = 0; x < width; x++)
-            views[x, y].SetHighlighted(false);
+            cells[x, y].SetHighlighted(false);
     }
 
     public void HighlightCells(IEnumerable<Vector2Int> cells)
     {
         ClearAllHighlights();
         foreach (var p in cells)
-            views[p.x, p.y].SetHighlighted(true);
+            this.cells[p.x, p.y].SetHighlighted(true);
     }
 }

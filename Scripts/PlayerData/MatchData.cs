@@ -9,6 +9,7 @@ public class MatchData
     public int currentHP;
     public int currentScore;
     public bool isGaming;
+    public bool isPausing;
     
     public List<BasicCard> handCards = new();
     // public Consumables[] consumablesThisMatch

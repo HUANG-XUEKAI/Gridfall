@@ -1,0 +1,161 @@
+using System;
+using UnityEngine;
+
+public class GameFlowStateMachine : MonoBehaviour
+{
+    [SerializeField] private HandManager handManager;
+    [SerializeField] private BoardManager boardManager;
+    private MatchDataCenter MDC => MatchDataCenter.Instance;
+    
+    public static GameFlowStateMachine Instance { get; private set; }
+
+    public GameFlowState CurrentState { get; private set; } = GameFlowState.None;
+    public GameFlowState PreviousState { get; private set; } = GameFlowState.None;
+
+    public event Action<GameFlowState, GameFlowState> OnStateChanged;
+
+    private void Awake()
+    {
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+
+        Instance = this;
+    }
+
+    private void Start()
+    {
+        RequestStartGame();
+    }
+
+    public void ChangeState(GameFlowState newState)
+    {
+        if (CurrentState == newState)
+            return;
+
+        var oldState = CurrentState;
+        ExitState(oldState);
+
+        PreviousState = oldState;
+        CurrentState = newState;
+
+        EnterState(newState);
+
+        OnStateChanged?.Invoke(oldState, newState);
+    }
+
+    private void EnterState(GameFlowState state)
+    {
+        switch (state)
+        {
+            case GameFlowState.MainMenu:
+            {
+                EnterMainMenu();
+                break;
+            }
+            case GameFlowState.Prepare:
+            {
+                EnterPrepare();
+                break;
+            }
+            case GameFlowState.GamePlay:
+            {
+                EnterGamePlay();
+                break;
+            }
+            case GameFlowState.GameOver:
+            {
+                EnterGameOver();
+                break;
+            }
+        }
+    }
+    
+    /*
+    boardManager.BuildBoard();          //生成
+    boardManager.ClearAllBlocks();      //清理所有方块
+    boardManager.ClearAllHighlights();  //清理所有高亮状态
+    boardManager.DestroyAllCells();     //销毁所有格子槽
+    
+    handManager.ResetHand();
+    handManager.ClearHand();            //清理手牌
+    
+    MDC.StartNewMatch();
+    */
+    
+    private void EnterMainMenu()
+    {
+        
+    }
+
+    private void EnterPrepare()
+    {
+        
+    }
+    
+    private void EnterGamePlay()
+    {
+        MDC.StartNewMatch();
+        boardManager.BuildBoard();
+        handManager.ResetHand();
+    }
+    
+    private void EnterGameOver()
+    {
+        boardManager.StopSpawning();
+    }
+
+    private void ExitState(GameFlowState state)
+    {
+        switch (state)
+        {
+            case GameFlowState.MainMenu:
+            {
+                ExitMainMenu();
+                break;
+            }
+            case GameFlowState.Prepare:
+            {
+                ExitPrepare();
+                break;
+            }
+            case GameFlowState.GamePlay:
+            {
+                ExitGamePlay();
+                break;
+            }
+            case GameFlowState.GameOver:
+            {
+                ExitGameOver();
+                break;
+            }
+        }
+    }
+
+    private void ExitMainMenu()
+    {
+        
+    }
+
+    private void ExitPrepare()
+    {
+        
+    }
+
+    private void ExitGamePlay()
+    {
+        
+    }
+    
+    private void ExitGameOver()
+    {
+        
+    }
+
+    public bool IsInState(GameFlowState state) => CurrentState == state;
+    
+    public void RequestStartGame() => ChangeState(GameFlowState.GamePlay);
+    public void RequestBackMainMenu() => ChangeState(GameFlowState.MainMenu);
+}
