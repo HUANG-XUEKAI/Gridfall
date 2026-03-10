@@ -27,7 +27,7 @@ public class GameFlowStateMachine : MonoBehaviour
 
     private void Start()
     {
-        RequestStartGame();
+        RequestBackMainMenu();
     }
 
     public void ChangeState(GameFlowState newState)
@@ -79,10 +79,10 @@ public class GameFlowStateMachine : MonoBehaviour
     boardManager.ClearAllHighlights();  //清理所有高亮状态
     boardManager.DestroyAllCells();     //销毁所有格子槽
     
-    handManager.ResetHand();
+    handManager.ResetHand();            //重置手牌
     handManager.ClearHand();            //清理手牌
     
-    MDC.StartNewMatch();
+    MDC.StartNewMatch();                //new一份局内数据
     */
     
     private void EnterMainMenu()
@@ -98,8 +98,9 @@ public class GameFlowStateMachine : MonoBehaviour
     private void EnterGamePlay()
     {
         MDC.StartNewMatch();
-        boardManager.BuildBoard();
         handManager.ResetHand();
+        boardManager.BuildBoard();
+        boardManager.StartSpawning();
     }
     
     private void EnterGameOver()

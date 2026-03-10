@@ -208,9 +208,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
-        m_MethodName: BackMainMenu
+      - m_Target: {fileID: 961422059}
+        m_TargetAssemblyTypeName: GameFlowStateMachine, Assembly-CSharp
+        m_MethodName: RequestBackMainMenu
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1029,9 +1029,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
-        m_MethodName: StartGame
+      - m_Target: {fileID: 961422059}
+        m_TargetAssemblyTypeName: GameFlowStateMachine, Assembly-CSharp
+        m_MethodName: RequestStartGame
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1384,9 +1384,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
-        m_MethodName: StartGame
+      - m_Target: {fileID: 961422059}
+        m_TargetAssemblyTypeName: GameFlowStateMachine, Assembly-CSharp
+        m_MethodName: RequestStartGame
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
