@@ -196,7 +196,16 @@ public class GameFlowStateMachine : MonoBehaviour
     public bool IsInState(GameFlowState state) => CurrentState == state;
     
     public void RequestPrepareGame() => ChangeState(GameFlowState.Prepare);
-    public void RequestStartGame() => ChangeState(GameFlowState.GamePlay);
+    public void RequestStartGame()
+    {
+        bool success = AccountDataCenter.Instance.CostEnergy(1);
+        if (!success)
+        {
+            Debug.Log("体力不足，无法开始新局。");
+            return;
+        }
+        ChangeState(GameFlowState.GamePlay);
+    }
     public void RequestBackMainMenu() => ChangeState(GameFlowState.MainMenu);
 
     #region 暂停游戏
