@@ -125,6 +125,8 @@ public class GameFlowStateMachine : MonoBehaviour
     private void EnterPrepare()
     {
         MDC.CreatNewMatchData();
+        boardManager.BuildBoard();
+        boardManager.ClearAllBlocks();
     }
     
     private void EnterGamePlay()
@@ -180,6 +182,7 @@ public class GameFlowStateMachine : MonoBehaviour
 
     private void ExitGamePlay()
     {
+        MDC.ResumeMatch();
         boardManager.ClearAllHighlights();
         boardManager.StopSpawning();
     }
@@ -195,4 +198,28 @@ public class GameFlowStateMachine : MonoBehaviour
     public void RequestPrepareGame() => ChangeState(GameFlowState.Prepare);
     public void RequestStartGame() => ChangeState(GameFlowState.GamePlay);
     public void RequestBackMainMenu() => ChangeState(GameFlowState.MainMenu);
+
+    #region 暂停游戏
+
+    public void PauseGame()
+    {
+        if (CurrentState != GameFlowState.GamePlay) return;
+        if (MDC.CurrentMatch == null) return;
+        if (MDC.CurrentMatch.isPausing) return;
+
+        MDC.PauseMatch();
+        boardManager.StopSpawning();
+    }
+
+    public void ResumeGame()
+    {
+        if (CurrentState != GameFlowState.GamePlay) return;
+        if (MDC.CurrentMatch == null) return;
+        if (!MDC.CurrentMatch.isPausing) return;
+
+        MDC.ResumeMatch();
+        boardManager.StartSpawning();
+    }
+
+    #endregion
 }

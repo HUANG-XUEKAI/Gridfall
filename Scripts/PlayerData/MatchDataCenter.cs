@@ -23,7 +23,8 @@ public class MatchDataCenter : MonoBehaviour
         {
             currentHP = MatchData.DefaultHP,
             currentScore = 0,
-            isGaming = false
+            isGaming = false,
+            isPausing = false,
         };
     }
 
@@ -42,6 +43,24 @@ public class MatchDataCenter : MonoBehaviour
         {
             finalScore = CurrentMatch.currentScore,
         });
+    }
+    
+    public void PauseMatch()
+    {
+        if (CurrentMatch == null) return;
+        if (CurrentMatch.isPausing) return;
+
+        CurrentMatch.isPausing = true;
+        GameEvents.RaiseGamePaused(true);
+    }
+
+    public void ResumeMatch()
+    {
+        if (CurrentMatch == null) return;
+        if (!CurrentMatch.isPausing) return;
+
+        CurrentMatch.isPausing = false;
+        GameEvents.RaiseGamePaused(false);
     }
     
     public void AddScore(int amount, string reason)

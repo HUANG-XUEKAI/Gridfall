@@ -7,11 +7,11 @@ public enum GameFlowState
     GameOver = 4,
 }
 
-public enum UIScreenType
+/*public enum UIScreenType
 {
     None = 0,
     MainMenuScreen = 1,
     GamingScreen = 2,
     PausePanel = 3,
     GameOverScreen = 4,
-}
+}*/

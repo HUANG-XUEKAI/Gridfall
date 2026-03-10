@@ -7,34 +7,71 @@ public class UIStateController : MonoBehaviour
     [SerializeField] private CanvasGroup preparePanel;
     [SerializeField] private CanvasGroup gameInterface;
     [SerializeField] private CanvasGroup gameOverPanel;
-
+    [SerializeField] private CanvasGroup pausePanel;
+    
     private void Awake()
     {
         if (GameFlowStateMachine.Instance != null)
             GameFlowStateMachine.Instance.OnStateChanged += HandleStateChanged;
+        
+        GameEvents.GamePaused += SetPausePanelVisible;
     }
 
     private void OnDestroy()
     {
         if (GameFlowStateMachine.Instance != null)
             GameFlowStateMachine.Instance.OnStateChanged -= HandleStateChanged;
+        
+        GameEvents.GamePaused -= SetPausePanelVisible;
     }
 
     private void Start()
     {
-        ApplyState(GameFlowState.MainMenu);
+        HideAll();
+        ApplyState(GameFlowState.None, GameFlowState.MainMenu);
     }
 
     private void HandleStateChanged(GameFlowState oldState, GameFlowState newState)
     {
-        ApplyState(newState);
+        ApplyState(oldState, newState);
     }
 
-    private void ApplyState(GameFlowState state)
+    private void ApplyState(GameFlowState oldState, GameFlowState newState)
     {
-        HideAll();
+        HideOldStateUI(oldState);
+        ShowNewStateUI(newState);
+    }
 
-        switch (state)
+    private void HideOldStateUI(GameFlowState oldState)
+    {
+        switch (oldState)
+        {
+            case GameFlowState.MainMenu:
+            {
+                Hide(mainMenu);
+                break;
+            }
+            case GameFlowState.Prepare:
+            {
+                Hide(preparePanel);
+                break;
+            }
+            case GameFlowState.GamePlay:
+            {
+                Hide(gameInterface);
+                break;
+            }
+            case GameFlowState.GameOver:
+            {
+                Hide(gameOverPanel);
+                break;
+            }
+        }
+    }
+
+    private void ShowNewStateUI(GameFlowState newState)
+    {
+        switch (newState)
         {
             case GameFlowState.MainMenu:
             {
@@ -62,9 +99,18 @@ public class UIStateController : MonoBehaviour
     private void HideAll()
     {
         Hide(mainMenu);
+        Hide(pausePanel);
         Hide(preparePanel);
         Hide(gameInterface);
         Hide(gameOverPanel);
+    }
+
+    private void SetPausePanelVisible(bool visible)
+    {
+        if (visible)
+            Show(pausePanel);
+        else
+            Hide(pausePanel);
     }
 
     public static void Show(CanvasGroup gui)
