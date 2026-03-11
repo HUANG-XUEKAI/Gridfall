@@ -26,11 +26,15 @@ public static class GameEvents
     public static event Action<bool> GamePaused;
     public static void RaiseGamePaused(bool isPaused) => GamePaused?.Invoke(isPaused);
     
+    public static event Action<ProfileChangedEvent> ProfileChanged;
+    public static void RaiseProfileChanged(ProfileChangedEvent e) => ProfileChanged?.Invoke(e);
+    
     public static event Action InventoryChanged;
     public static void RaiseInventoryChanged() => InventoryChanged?.Invoke();
     
-    public static event Action<ProfileChangedEvent> ProfileChanged;
-    public static void RaiseProfileChanged(ProfileChangedEvent e) => ProfileChanged?.Invoke(e);
+    public static event Action PreparedConsumablesChanged;
+    public static void RaisePreparedConsumablesChanged()
+        => PreparedConsumablesChanged?.Invoke();
 }
 
 public class GameStartedEvent

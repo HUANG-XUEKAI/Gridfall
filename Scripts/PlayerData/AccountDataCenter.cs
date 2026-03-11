@@ -62,17 +62,17 @@ public class AccountDataCenter : MonoBehaviour
 
     private void InitializeDefaultData()
     {
-        AccountData.profile = Profile;
-        AccountData.inventory = Inventory;
-        AccountData.progress = Progress;
+        Profile = AccountData.profile;
+        Inventory = AccountData.inventory;
+        Progress = AccountData.progress;
         
-        Profile.playerId = "LocalPlayer";
-        Profile.playerName = "Player";
-        Profile.energy = 20;
-        Profile.gold = 0;
-        Profile.diamond = 0;
-        Profile.bestScore = 0;
-        Profile.tutorialFinished = false;
+        AccountData.profile.playerId = "LocalPlayer";
+        AccountData.profile.playerName = "Player";
+        AccountData.profile.energy = 20;
+        AccountData.profile.gold = 0;
+        AccountData.profile.diamond = 0;
+        AccountData.profile.bestScore = 0;
+        AccountData.profile.tutorialFinished = false;
     }
 
     private void SaveProfile()

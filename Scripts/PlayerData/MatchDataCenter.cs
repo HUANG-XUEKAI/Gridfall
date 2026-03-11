@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Linq;
 
 public class MatchDataCenter : MonoBehaviour
 {
@@ -127,4 +128,71 @@ public class MatchDataCenter : MonoBehaviour
             delta = delta
         });
     }
+    
+    public void ClearPreparedConsumables()
+    {
+        if (CurrentMatch == null) return;
+
+        CurrentMatch.ClearPreparedConsumables();
+        GameEvents.RaisePreparedConsumablesChanged();
+    }
+
+    public bool CanAddPreparedConsumable()
+    {
+        if (CurrentMatch == null) return false;
+        return CurrentMatch.CanAddPreparedConsumable();
+    }
+
+    public void AddPreparedConsumable(string itemId)
+    {
+        if (CurrentMatch == null) return;
+
+        bool success = CurrentMatch.AddPreparedConsumable(itemId);
+        if (!success) return;
+
+        GameEvents.RaisePreparedConsumablesChanged();
+        
+        // 测试代码
+        Debug.Log(string.Join(", ", CurrentMatch.equippedConsumables.Select(x => x.itemId)));
+    }
+    
+    // 测试版
+    public void RemovePreparedConsumable(string itemId)
+    {
+        if (CurrentMatch == null) return;
+
+        bool success = CurrentMatch.RemovePreparedConsumable(itemId);
+        if (!success) return;
+
+        GameEvents.RaisePreparedConsumablesChanged();
+        
+        // 测试代码
+        Debug.Log(string.Join(", ", CurrentMatch.equippedConsumables.Select(x => x.itemId)));
+    }
+    
+    /*
+     public bool AddPreparedConsumable(string itemId)
+    {
+        if (CurrentMatch == null) return false;
+
+        bool success = CurrentMatch.AddPreparedConsumable(itemId);
+        if (!success) return false;
+
+        GameEvents.RaisePreparedConsumablesChanged();
+        //return true;
+    }
+    */
+    
+    /*
+     public bool RemovePreparedConsumable(string itemId)
+    {
+        if (CurrentMatch == null) return false;
+
+        bool success = CurrentMatch.RemovePreparedConsumable(itemId);
+        if (!success) return false;
+
+        GameEvents.RaisePreparedConsumablesChanged();
+        return true;
+    }
+    */
 }

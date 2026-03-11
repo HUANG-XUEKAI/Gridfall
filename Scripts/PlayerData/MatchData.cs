@@ -5,6 +5,7 @@ public class MatchData
 {
     public const int MaxHP = 99;
     public const int DefaultHP = 5;
+    public const int MaxPreparedConsumableCount = 2;
     
     public int currentHP;
     public int currentScore;
@@ -16,21 +17,36 @@ public class MatchData
 
     public void ClearPreparedConsumables()
     {
-        
+        equippedConsumables.Clear();
     }
 
-    public void CanAddPreparedConsumable()
+    public bool CanAddPreparedConsumable()
     {
-        
+        return equippedConsumables.Count < MaxPreparedConsumableCount;
     }
 
-    public void AddPreparedConsumable(string itemId)
+    public bool AddPreparedConsumable(string itemId)
     {
-        
+        if (string.IsNullOrEmpty(itemId)) return false;
+        if (!CanAddPreparedConsumable()) return false;
+
+        equippedConsumables.Add(new MatchConsumableSlot
+        {
+            itemId = itemId,
+            used = false
+        });
+
+        return true;
     }
 
-    public void RemovePreparedConsumable(string itemId)
+    public bool RemovePreparedConsumable(string itemId)
     {
-        
+        if (string.IsNullOrEmpty(itemId)) return false;
+
+        var slot = equippedConsumables.FindLast(x => x.itemId == itemId && !x.used);
+        if (slot == null) return false;
+
+        equippedConsumables.Remove(slot);
+        return true;
     }
 }
