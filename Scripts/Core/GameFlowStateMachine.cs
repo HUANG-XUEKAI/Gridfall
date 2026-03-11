@@ -126,7 +126,6 @@ public class GameFlowStateMachine : MonoBehaviour
     private void EnterPrepare()
     {
         MDC.CreatNewMatchData();
-        MDC.ClearCarriedItems();
         
         boardManager.BuildBoard();
         boardManager.ClearAllBlocks();
@@ -208,54 +207,8 @@ public class GameFlowStateMachine : MonoBehaviour
             return;
         }
         
-        /*if (!TryConsumePreparedConsumables())
-        {
-            Debug.Log("道具库存不足，无法开始新局。");
-            ADC.AddEnergy(1); // 把刚扣的体力退回
-            return;
-        }*/ 
-        
         ChangeState(GameFlowState.GamePlay);
     }
-    
-    /*private bool TryConsumePreparedConsumables()
-    {
-        if (MDC.CurrentMatch == null) return false;
-
-        var slots = MDC.CurrentMatch.equippedConsumables;
-        if (slots == null || slots.Count == 0) return true;
-
-        // 先统计每种道具要扣几次
-        Dictionary<string, int> costMap = new();
-
-        foreach (var slot in slots)
-        {
-            if (slot == null || string.IsNullOrEmpty(slot.itemId))
-                continue;
-
-            if (!costMap.ContainsKey(slot.itemId))
-                costMap[slot.itemId] = 0;
-
-            costMap[slot.itemId]++;
-        }
-
-        // 先检查库存够不够
-        foreach (var pair in costMap)
-        {
-            if (ADC.GetConsumableCount(pair.Key) < pair.Value)
-                return false;
-        }
-
-        // 再正式扣
-        foreach (var pair in costMap)
-        {
-            bool success = ADC.CostConsumable(pair.Key, pair.Value);
-            if (!success)
-                return false;
-        }
-
-        return true;
-    }*/
     
     public void RequestBackMainMenu() => ChangeState(GameFlowState.MainMenu);
 
