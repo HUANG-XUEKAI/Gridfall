@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ItemSelectDisplay : MonoBehaviour
+public class ItemDisplay : MonoBehaviour
 {
     [Header("Carry Slots")]
     [SerializeField] private ItemSlot[] carrySlotsInPrepare = new ItemSlot[MatchData.MaxCarriedCount];
