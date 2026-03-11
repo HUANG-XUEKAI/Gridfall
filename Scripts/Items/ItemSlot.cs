@@ -8,12 +8,12 @@ public class ItemSlot : MonoBehaviour
     [SerializeField] private Image iconImage;
     [SerializeField] private TextMeshProUGUI countText;
 
-    public ConsumableDefinition Item { get; private set; }
+    public BasicItem Item { get; private set; }
     public int Count { get; private set; }
 
     public Button Button => button;
 
-    public void Bind(ConsumableDefinition item, int count)
+    public void Bind(BasicItem item, int count)
     {
         Item = item;
         Count = count;

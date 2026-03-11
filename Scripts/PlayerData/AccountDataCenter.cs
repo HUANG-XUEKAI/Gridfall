@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class AccountDataCenter : MonoBehaviour
@@ -8,6 +9,9 @@ public class AccountDataCenter : MonoBehaviour
     public PlayerAccountData.ProfileData Profile { get; private set; } = new();
     public PlayerAccountData.InventoryData Inventory { get; private set; } = new();
     public PlayerAccountData.ProgressData Progress { get; private set; } = new();
+    
+    // 测试用
+    public List<ItemStack> initialConsumables = new();
 
     private void Awake()
     {
@@ -62,10 +66,6 @@ public class AccountDataCenter : MonoBehaviour
 
     private void InitializeDefaultData()
     {
-        Profile = AccountData.profile;
-        Inventory = AccountData.inventory;
-        Progress = AccountData.progress;
-        
         AccountData.profile.playerId = "LocalPlayer";
         AccountData.profile.playerName = "Player";
         AccountData.profile.energy = 20;
@@ -73,6 +73,13 @@ public class AccountDataCenter : MonoBehaviour
         AccountData.profile.diamond = 0;
         AccountData.profile.bestScore = 0;
         AccountData.profile.tutorialFinished = false;
+
+        // 测试用
+        AccountData.inventory.consumables = initialConsumables;
+        
+        Profile = AccountData.profile;
+        Inventory = AccountData.inventory;
+        Progress = AccountData.progress;
     }
 
     private void SaveProfile()
@@ -160,16 +167,18 @@ public class AccountDataCenter : MonoBehaviour
         if (Inventory == null || Inventory.consumables == null || string.IsNullOrEmpty(itemId))
             return 0;
 
-        var stack = Inventory.consumables.Find(x => x.itemId == itemId);
+        var stack = Inventory.consumables.Find(x => x.item.itemId == itemId);
         return stack != null ? stack.count : 0;
     }
 
     public void AddConsumable(string itemId, int amount)
     {
-        if (Inventory == null || Inventory.consumables == null) return;
+        // TODO : 需要定义一个 所有ConsumableDefinition的Database，用来根据itemId拿到对应的ConsumableDefinition
+        
+        /*if (Inventory == null || Inventory.consumables == null) return;
         if (string.IsNullOrEmpty(itemId) || amount <= 0) return;
 
-        var stack = Inventory.consumables.Find(x => x.itemId == itemId);
+        var stack = Inventory.consumables.Find(x => x.item.itemId == itemId);
         if (stack == null)
         {
             stack = new InventoryItemStack
@@ -182,7 +191,7 @@ public class AccountDataCenter : MonoBehaviour
         else
         {
             stack.count += amount;
-        }
+        }*/
 
         SaveAccount();
         GameEvents.RaiseInventoryChanged();
@@ -193,7 +202,7 @@ public class AccountDataCenter : MonoBehaviour
         if (Inventory == null || Inventory.consumables == null) return false;
         if (string.IsNullOrEmpty(itemId) || amount <= 0) return false;
 
-        var stack = Inventory.consumables.Find(x => x.itemId == itemId);
+        var stack = Inventory.consumables.Find(x => x.item.itemId == itemId);
         if (stack == null || stack.count < amount)
             return false;
 

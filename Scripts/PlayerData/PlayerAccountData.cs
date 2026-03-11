@@ -25,7 +25,7 @@ public class PlayerAccountData
     [Serializable]
     public class InventoryData
     {
-        public List<InventoryItemStack> consumables = new();
+        public List<ItemStack> consumables = new();
         public List<string> ownedCardSkinIds = new();
         public List<string> ownedBoardSkinIds = new();
     }

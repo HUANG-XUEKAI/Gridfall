@@ -13,40 +13,43 @@ public class MatchData
     public bool isPausing;
     
     public List<BasicCard> handCards = new();
-    public List<MatchConsumableSlot> equippedConsumables = new();
+    public List<ItemState> carriedItems = new();
 
-    public void ClearPreparedConsumables()
+    public void ClearCarriedItems()
     {
-        equippedConsumables.Clear();
+        carriedItems.Clear();
     }
 
-    public bool CanAddPreparedConsumable()
+    public bool CanCarryMore()
     {
-        return equippedConsumables.Count < MaxPreparedConsumableCount;
+        return carriedItems.Count < MaxPreparedConsumableCount;
     }
 
-    public bool AddPreparedConsumable(string itemId)
+    public bool AddCarriedItem(BasicItem item)
     {
-        if (string.IsNullOrEmpty(itemId)) return false;
-        if (!CanAddPreparedConsumable()) return false;
+        if (item == null) return false;
+        if (!CanCarryMore()) return false;
 
-        equippedConsumables.Add(new MatchConsumableSlot
+        carriedItems.Add(new ItemState
         {
-            itemId = itemId,
+            item = item,
             used = false
         });
 
         return true;
     }
 
-    public bool RemovePreparedConsumable(string itemId)
+    public bool RemoveCarriedItem(string itemId)
     {
-        if (string.IsNullOrEmpty(itemId)) return false;
+        /*if (string.IsNullOrEmpty(itemId)) return false;
 
-        var slot = equippedConsumables.FindLast(x => x.itemId == itemId && !x.used);
+        var slot = carriedItems.FindLast(x => x.item == itemId && !x.used);
         if (slot == null) return false;
 
-        equippedConsumables.Remove(slot);
+        carriedItems.Remove(slot);
+        return true;*/
+
         return true;
+        // 重写
     }
 }
