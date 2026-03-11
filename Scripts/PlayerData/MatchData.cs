@@ -12,5 +12,5 @@ public class MatchData
     public bool isPausing;
     
     public List<BasicCard> handCards = new();
-    // public Consumables[] consumablesThisMatch
+    public List<MatchConsumableSlot> equippedConsumables = new();
 }

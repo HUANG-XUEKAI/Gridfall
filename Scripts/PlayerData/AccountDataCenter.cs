@@ -23,6 +23,12 @@ public class AccountDataCenter : MonoBehaviour
     private void Start()
     {
         NotifyProfileLoaded();
+        
+        AddConsumable("hp_potion", 3);
+        AddConsumable("bomb_3x3", 1);
+
+        Debug.Log(GetConsumableCount("hp_potion"));
+        Debug.Log(GetConsumableCount("bomb_3x3"));
     }
 
     private void LoadOrCreateProfile()
@@ -128,5 +134,57 @@ public class AccountDataCenter : MonoBehaviour
         Profile.diamond += amount;
         SaveProfile();
         RaiseProfileChanged();
+    }
+    
+    public int GetConsumableCount(string itemId)
+    {
+        if (Inventory == null || Inventory.consumables == null || string.IsNullOrEmpty(itemId))
+            return 0;
+
+        var stack = Inventory.consumables.Find(x => x.itemId == itemId);
+        return stack != null ? stack.count : 0;
+    }
+
+    public void AddConsumable(string itemId, int amount)
+    {
+        if (Inventory == null || Inventory.consumables == null) return;
+        if (string.IsNullOrEmpty(itemId) || amount <= 0) return;
+
+        var stack = Inventory.consumables.Find(x => x.itemId == itemId);
+        if (stack == null)
+        {
+            stack = new InventoryItemStack
+            {
+                itemId = itemId,
+                count = amount
+            };
+            Inventory.consumables.Add(stack);
+        }
+        else
+        {
+            stack.count += amount;
+        }
+
+        //SaveInventory(); //保存数据
+        //RaiseInventoryChanged(); //广播通知
+    }
+
+    public bool CostConsumable(string itemId, int amount)
+    {
+        if (Inventory == null || Inventory.consumables == null) return false;
+        if (string.IsNullOrEmpty(itemId) || amount <= 0) return false;
+
+        var stack = Inventory.consumables.Find(x => x.itemId == itemId);
+        if (stack == null || stack.count < amount)
+            return false;
+
+        stack.count -= amount;
+
+        if (stack.count <= 0)
+            Inventory.consumables.Remove(stack);
+
+        //SaveInventory(); //保存数据
+        //RaiseInventoryChanged(); //广播通知
+        return true;
     }
 }

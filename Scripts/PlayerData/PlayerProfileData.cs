@@ -9,6 +9,5 @@ public class PlayerProfileData
     public int diamond;
 
     public int bestScore;
-
     public bool tutorialFinished;
 }
