@@ -3,12 +3,12 @@ using UnityEngine;
 
 public static class AccountLocalSave
 {
-    private const string FileName = "player_profile.json";
+    private const string FileName = "player_account.json";
 
     private static string FilePath =>
         Path.Combine(Application.persistentDataPath, FileName);
 
-    public static void SaveProfile(PlayerProfileData data)
+    public static void SaveAccount(PlayerAccountData data)
     {
         if (data == null) return;
 
@@ -16,7 +16,7 @@ public static class AccountLocalSave
         File.WriteAllText(FilePath, json);
     }
 
-    public static PlayerProfileData LoadProfile()
+    public static PlayerAccountData LoadAccount()
     {
         if (!File.Exists(FilePath))
             return null;
@@ -25,15 +25,15 @@ public static class AccountLocalSave
         if (string.IsNullOrEmpty(json))
             return null;
 
-        return JsonUtility.FromJson<PlayerProfileData>(json);
+        return JsonUtility.FromJson<PlayerAccountData>(json);
     }
 
-    public static bool HasProfileSave()
+    public static bool HasAccountSave()
     {
         return File.Exists(FilePath);
     }
 
-    public static void DeleteProfileSave()
+    public static void DeleteAccountSave()
     {
         if (File.Exists(FilePath))
             File.Delete(FilePath);

@@ -2,24 +2,32 @@ using System;
 
 public static class GameEvents
 {
-    public static event Action<CardPlayedEvent>    CardPlayed;
-    public static event Action<BoardResolvedEvent> BoardResolved;
-    public static event Action<HPChangedEvent>     HPChanged;
-    public static event Action<SpecialEffectEvent> EffectExecuted;
-    public static event Action<GameStartedEvent>   GameStarted; 
-    public static event Action<GameOverEvent>      GameOver;
-    public static event Action<ScoreChangedEvent>  ScoreChanged;
-    public static event Action<bool>               GamePaused;
+    public static event Action<CardPlayedEvent> CardPlayed;
+    public static void RaiseCardPlayed(CardPlayedEvent e) => CardPlayed?.Invoke(e);
     
-    public static void RaiseCardPlayed(CardPlayedEvent e)        => CardPlayed?.Invoke(e);
-    public static void RaiseBoardResolved(BoardResolvedEvent e)  => BoardResolved?.Invoke(e);
-    public static void RaiseHPChanged(HPChangedEvent e)          => HPChanged?.Invoke(e);
+    public static event Action<BoardResolvedEvent> BoardResolved;
+    public static void RaiseBoardResolved(BoardResolvedEvent e) => BoardResolved?.Invoke(e);
+    
+    public static event Action<HPChangedEvent> HPChanged;
+    public static void RaiseHPChanged(HPChangedEvent e) => HPChanged?.Invoke(e);
+    
+    public static event Action<SpecialEffectEvent> EffectExecuted;
     public static void RaiseEffectExecuted(SpecialEffectEvent e) => EffectExecuted?.Invoke(e);
-    public static void RaiseGameStared(GameStartedEvent e)       => GameStarted?.Invoke(e);    
-    public static void RaiseGameOver(GameOverEvent e)            => GameOver?.Invoke(e);
-    public static void RaiseScoreChanged(ScoreChangedEvent e)    => ScoreChanged?.Invoke(e);
-    public static void RaiseGamePaused(bool isPaused)            => GamePaused?.Invoke(isPaused);
-   
+    
+    public static event Action<GameStartedEvent> GameStarted; 
+    public static void RaiseGameStared(GameStartedEvent e) => GameStarted?.Invoke(e);   
+    
+    public static event Action<GameOverEvent> GameOver;
+    public static void RaiseGameOver(GameOverEvent e) => GameOver?.Invoke(e);
+    
+    public static event Action<ScoreChangedEvent> ScoreChanged;
+    public static void RaiseScoreChanged(ScoreChangedEvent e) => ScoreChanged?.Invoke(e);
+    
+    public static event Action<bool> GamePaused;
+    public static void RaiseGamePaused(bool isPaused) => GamePaused?.Invoke(isPaused);
+    
+    public static event Action InventoryChanged;
+    public static void RaiseInventoryChanged() => InventoryChanged?.Invoke();
     
     public static event Action<ProfileChangedEvent> ProfileChanged;
     public static void RaiseProfileChanged(ProfileChangedEvent e) => ProfileChanged?.Invoke(e);

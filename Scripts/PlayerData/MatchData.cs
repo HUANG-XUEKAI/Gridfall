@@ -13,4 +13,24 @@ public class MatchData
     
     public List<BasicCard> handCards = new();
     public List<MatchConsumableSlot> equippedConsumables = new();
+
+    public void ClearPreparedConsumables()
+    {
+        
+    }
+
+    public void CanAddPreparedConsumable()
+    {
+        
+    }
+
+    public void AddPreparedConsumable(string itemId)
+    {
+        
+    }
+
+    public void RemovePreparedConsumable(string itemId)
+    {
+        
+    }
 }

@@ -4,9 +4,10 @@ public class AccountDataCenter : MonoBehaviour
 {
     public static AccountDataCenter Instance { get; private set; }
 
-    public PlayerProfileData Profile { get; private set; } = new();
-    public PlayerInventoryData Inventory { get; private set; } = new();
-    public PlayerProgressData Progress { get; private set; } = new();
+    public PlayerAccountData AccountData { get; private set; }  = new PlayerAccountData();
+    public PlayerAccountData.ProfileData Profile { get; private set; } = new();
+    public PlayerAccountData.InventoryData Inventory { get; private set; } = new();
+    public PlayerAccountData.ProgressData Progress { get; private set; } = new();
 
     private void Awake()
     {
@@ -17,36 +18,54 @@ public class AccountDataCenter : MonoBehaviour
         }
 
         Instance = this;
-        LoadOrCreateProfile();
+        LoadOrCreateAccount();
     }
     
     private void Start()
     {
         NotifyProfileLoaded();
         
+        /*// 调试代码
         AddConsumable("hp_potion", 3);
         AddConsumable("bomb_3x3", 1);
 
         Debug.Log(GetConsumableCount("hp_potion"));
-        Debug.Log(GetConsumableCount("bomb_3x3"));
+        Debug.Log(GetConsumableCount("bomb_3x3"));*/
     }
 
-    private void LoadOrCreateProfile()
+    private void LoadOrCreateAccount()
     {
-        var loaded = AccountLocalSave.LoadProfile();
+        var loaded = AccountLocalSave.LoadAccount();
 
         if (loaded != null)
         {
-            Profile = loaded;
+            Profile = loaded.profile ?? new PlayerAccountData.ProfileData();
+            Inventory = loaded.inventory ?? new PlayerAccountData.InventoryData();
+            Progress = loaded.progress ?? new PlayerAccountData.ProgressData();
             return;
         }
 
         InitializeDefaultData();
-        SaveProfile();
+        SaveAccount();
     }
+    
+    private void SaveAccount()
+    {
+        AccountLocalSave.SaveAccount(new PlayerAccountData
+        {
+            profile = Profile,
+            inventory = Inventory,
+            progress = Progress
+        });
+    }
+
 
     private void InitializeDefaultData()
     {
+        AccountData.profile = Profile;
+        AccountData.inventory = Inventory;
+        AccountData.progress = Progress;
+        
         Profile.playerId = "LocalPlayer";
         Profile.playerName = "Player";
         Profile.energy = 20;
@@ -58,7 +77,7 @@ public class AccountDataCenter : MonoBehaviour
 
     private void SaveProfile()
     {
-        AccountLocalSave.SaveProfile(Profile);
+        AccountLocalSave.SaveAccount(AccountData);
     }
 
     private void RaiseProfileChanged()
@@ -165,8 +184,8 @@ public class AccountDataCenter : MonoBehaviour
             stack.count += amount;
         }
 
-        //SaveInventory(); //保存数据
-        //RaiseInventoryChanged(); //广播通知
+        SaveAccount();
+        GameEvents.RaiseInventoryChanged();
     }
 
     public bool CostConsumable(string itemId, int amount)
@@ -183,8 +202,8 @@ public class AccountDataCenter : MonoBehaviour
         if (stack.count <= 0)
             Inventory.consumables.Remove(stack);
 
-        //SaveInventory(); //保存数据
-        //RaiseInventoryChanged(); //广播通知
+        SaveAccount();
+        GameEvents.RaiseInventoryChanged();
         return true;
     }
 }

@@ -6,6 +6,7 @@ public class GameFlowStateMachine : MonoBehaviour
     [SerializeField] private HandManager handManager;
     [SerializeField] private BoardManager boardManager;
     private MatchDataCenter MDC => MatchDataCenter.Instance;
+    private AccountDataCenter ADC => AccountDataCenter.Instance;
     
     public static GameFlowStateMachine Instance { get; private set; }
 
@@ -198,11 +199,21 @@ public class GameFlowStateMachine : MonoBehaviour
     public void RequestPrepareGame() => ChangeState(GameFlowState.Prepare);
     public void RequestStartGame()
     {
-        bool success = AccountDataCenter.Instance.CostEnergy(1);
-        if (!success)
+        bool energyEnough = AccountDataCenter.Instance.CostEnergy(1);
+        if (!energyEnough)
         {
             Debug.Log("体力不足，无法开始新局。");
             return;
+        }
+        
+        foreach (var e in MDC.CurrentMatch.equippedConsumables)
+        {
+            bool consumablesEnough = ADC.CostConsumable(e.itemId, 1);
+            if (!consumablesEnough)
+            {
+                Debug.Log("道具不足，无法开始新局。");
+                return;
+            }
         }
         ChangeState(GameFlowState.GamePlay);
     }
