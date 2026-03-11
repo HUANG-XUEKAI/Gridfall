@@ -143,6 +143,7 @@ public class MatchDataCenter : MonoBehaviour
         return CurrentMatch.CanAddPreparedConsumable();
     }
 
+    // 测试版
     public void AddPreparedConsumable(string itemId)
     {
         if (CurrentMatch == null) return;
