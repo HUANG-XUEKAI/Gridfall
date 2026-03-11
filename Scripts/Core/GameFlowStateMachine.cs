@@ -1,6 +1,6 @@
 using System;
-using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GameFlowStateMachine : MonoBehaviour
 {
@@ -15,7 +15,7 @@ public class GameFlowStateMachine : MonoBehaviour
     public GameFlowState PreviousState { get; private set; } = GameFlowState.None;
 
     public event Action<GameFlowState, GameFlowState> OnStateChanged;
-
+    
     private void Awake()
     {
         if (Instance != null && Instance != this)
@@ -209,17 +209,17 @@ public class GameFlowStateMachine : MonoBehaviour
             return;
         }
         
-        if (!TryConsumePreparedConsumables())
+        /*if (!TryConsumePreparedConsumables())
         {
             Debug.Log("道具库存不足，无法开始新局。");
             ADC.AddEnergy(1); // 把刚扣的体力退回
             return;
-        }
+        }*/ 
         
         ChangeState(GameFlowState.GamePlay);
     }
     
-    private bool TryConsumePreparedConsumables()
+    /*private bool TryConsumePreparedConsumables()
     {
         if (MDC.CurrentMatch == null) return false;
 
@@ -256,7 +256,7 @@ public class GameFlowStateMachine : MonoBehaviour
         }
 
         return true;
-    }
+    }*/
     
     public void RequestBackMainMenu() => ChangeState(GameFlowState.MainMenu);
 
