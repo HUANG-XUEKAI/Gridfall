@@ -29,12 +29,12 @@ public static class GameEvents
     public static event Action<ProfileChangedEvent> ProfileChanged;
     public static void RaiseProfileChanged(ProfileChangedEvent e) => ProfileChanged?.Invoke(e);
     
-    public static event Action InventoryChanged;
-    public static void RaiseInventoryChanged() => InventoryChanged?.Invoke();
+    public static event Action InventoryItemsChanged;
+    public static void RaiseInventoryItemsChanged() => InventoryItemsChanged?.Invoke();
     
-    public static event Action PreparedConsumablesChanged;
-    public static void RaisePreparedConsumablesChanged()
-        => PreparedConsumablesChanged?.Invoke();
+    public static event Action CarriedItemsChanged;
+    public static void RaiseCarriedItemsChanged()
+        => CarriedItemsChanged?.Invoke();
 }
 
 public class GameStartedEvent

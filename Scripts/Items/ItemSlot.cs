@@ -6,24 +6,21 @@ public class ItemSlot : MonoBehaviour
 {
     [SerializeField] private Button button;
     [SerializeField] private Image iconImage;
-    [SerializeField] private TextMeshProUGUI countText;
+    [SerializeField] private bool showQuantity = true;
+    [SerializeField] private TextMeshProUGUI quantityText;
 
     public BasicItem Item { get; private set; }
-    public int Count { get; private set; }
-
     public Button Button => button;
 
     public void Bind(BasicItem item, int count)
     {
         Item = item;
-        Count = count;
         RefreshView();
     }
 
     public void SetEmpty()
     {
         Item = null;
-        Count = 0;
         RefreshView();
     }
 
@@ -37,9 +34,9 @@ public class ItemSlot : MonoBehaviour
             iconImage.sprite = hasItem ? Item.icon : null;
         }
 
-        if (countText != null)
+        if (quantityText != null && showQuantity)
         {
-            countText.text = hasItem ? Count.ToString() : "";
+            quantityText.text = hasItem ? Item.quantity.ToString() : "";
         }
 
         if (button != null)

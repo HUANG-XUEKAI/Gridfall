@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using System.Linq;
 
@@ -130,39 +131,63 @@ public class MatchDataCenter : MonoBehaviour
     }
     
     
-    public void ClearPreparedConsumables()
+    public void ClearCarriedItems()
     {
         if (CurrentMatch == null) return;
 
-        CurrentMatch.ClearCarriedItems();
-        GameEvents.RaisePreparedConsumablesChanged();
+        Array.Clear(CurrentMatch.carriedItems, 0, 2);
+        GameEvents.RaiseCarriedItemsChanged();
     }
 
-    public bool CanAddPreparedConsumable()
-    {
-        if (CurrentMatch == null) return false;
-        return CurrentMatch.CanCarryMore();
-    }
-    
-     public bool AddPreparedConsumable(string itemId)
-    {
-        /*if (CurrentMatch == null) return false;
-
-        bool success = CurrentMatch.AddCarriedItem(itemId);
-        if (!success) return false;
-
-        GameEvents.RaisePreparedConsumablesChanged();*/
-        return true;
-    }
-    
-     public bool RemovePreparedConsumable(string itemId)
+    public bool CanCarryMoreItem()
     {
         if (CurrentMatch == null) return false;
 
-        bool success = CurrentMatch.RemoveCarriedItem(itemId);
-        if (!success) return false;
+        foreach (var item in CurrentMatch.carriedItems)
+        {
+            if (item == null) 
+                return true;
+        }
+        
+        return false;
+    }
+    
+    public bool AddCarriedItem(BasicItem item)
+    {
+        if (CurrentMatch == null) return false;
+        if (item == null || 
+            string.IsNullOrEmpty(item.itemId) || 
+            item.itemClass != ItemClass.Consumable) return false;
+        
+        for (int i = 0; i < CurrentMatch.carriedItems.Length; i++)
+        {
+            if (CurrentMatch.carriedItems[i] == null)
+            {
+                CurrentMatch.carriedItems[i] = Instantiate(item);
+                GameEvents.RaiseCarriedItemsChanged();
+                return true;
+            }
+        }
+        
+        return false;
+    }
+    
+    public void CostCarriedItem(int index)
+    {
+        if (CurrentMatch == null) return;
 
-        GameEvents.RaisePreparedConsumablesChanged();
-        return true;
+        int clampedIndex = Mathf.Clamp(index, 0, MatchData.MaxCarriedCount);
+        CurrentMatch.carriedItems[clampedIndex] = null;
+        
+        GameEvents.RaiseCarriedItemsChanged();
+    }
+
+    public void ResetCarriedItems(BasicItem[] items)
+    {
+        if (CurrentMatch == null || items == null) return;
+        
+        CurrentMatch.carriedItems = items;
+        
+        GameEvents.RaiseCarriedItemsChanged();
     }
 }

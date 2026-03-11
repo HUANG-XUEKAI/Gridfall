@@ -11,17 +11,13 @@ public class UIStateController : MonoBehaviour
     
     private void Awake()
     {
-        if (GameFlowStateMachine.Instance != null)
-            GameFlowStateMachine.Instance.OnStateChanged += HandleStateChanged;
-        
+        GameFlowStateMachine.OnStateChanged += HandleStateChanged;
         GameEvents.GamePaused += SetPausePanelVisible;
     }
 
     private void OnDestroy()
     {
-        if (GameFlowStateMachine.Instance != null)
-            GameFlowStateMachine.Instance.OnStateChanged -= HandleStateChanged;
-        
+        GameFlowStateMachine.OnStateChanged -= HandleStateChanged;
         GameEvents.GamePaused -= SetPausePanelVisible;
     }
 

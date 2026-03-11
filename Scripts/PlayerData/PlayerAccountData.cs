@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using UnityEngine.Serialization;
 
 [Serializable]
 public class PlayerAccountData
@@ -25,7 +26,7 @@ public class PlayerAccountData
     [Serializable]
     public class InventoryData
     {
-        public List<ItemStack> consumables = new();
+        public List<BasicItem> ownedItems = new();
         public List<string> ownedCardSkinIds = new();
         public List<string> ownedBoardSkinIds = new();
     }

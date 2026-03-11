@@ -3540,15 +3540,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c536b4fbd1fc95f4ba649a9e3dd8231f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  carrySlot1: {fileID: 2424941135405226529}
-  carrySlot2: {fileID: 237218157}
+  carrySlotsInPrepare:
+  - {fileID: 2424941135405226529}
+  - {fileID: 237218157}
+  carrySlotsInGame:
+  - {fileID: 0}
+  - {fileID: 0}
   page1Root: {fileID: 369979275}
   page2Root: {fileID: 1358800359}
   page3Root: {fileID: 791059940}
   itemSlotPrefab: {fileID: 4362316667484692500, guid: 24c4e54a39763f342b276cc60025b689, type: 3}
-  ConsumableDB:
-  - {fileID: 11400000, guid: c11e80c6c82b9f34ba75f71b4d19b6a6, type: 2}
-  - {fileID: 11400000, guid: 78fa89a57e3812e47ae0a70c4d2f9a70, type: 2}
 --- !u!1 &806684454
 GameObject:
   m_ObjectHideFlags: 0
@@ -5226,11 +5227,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6b5ec8b27a367414a96fe633849728cc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  initialConsumables:
-  - item: {fileID: 11400000, guid: c11e80c6c82b9f34ba75f71b4d19b6a6, type: 2}
-    count: 99
-  - item: {fileID: 11400000, guid: 78fa89a57e3812e47ae0a70c4d2f9a70, type: 2}
-    count: 99
+  initialItem: {fileID: 0}
 --- !u!4 &1357717519
 Transform:
   m_ObjectHideFlags: 0
@@ -7871,6 +7868,7 @@ GameObject:
   serializedVersion: 7
   m_Component:
   - component: {fileID: 2007107636}
+  - component: {fileID: 2007107637}
   m_Layer: 0
   m_HasEditorInfo: 1
   m_Name: ItemManager
@@ -7894,6 +7892,19 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2007107637
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2007107635}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 73afa4cb8e94e714980a853156770a63, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  itemsDatabase: []
 --- !u!1 &2045917422
 GameObject:
   m_ObjectHideFlags: 0
@@ -8223,6 +8234,7 @@ SceneRoots:
   - {fileID: 1526256469}
   - {fileID: 833476137}
   - {fileID: 782541138}
+  - {fileID: 2007107636}
   - {fileID: 448299113}
   - {fileID: 1160423791}
   - {fileID: 850316335}
@@ -8230,4 +8242,3 @@ SceneRoots:
   - {fileID: 1357717519}
   - {fileID: 961422060}
   - {fileID: 1287890004}
-  - {fileID: 2007107636}

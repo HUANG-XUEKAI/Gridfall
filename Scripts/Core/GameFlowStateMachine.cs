@@ -1,6 +1,5 @@
 using System;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class GameFlowStateMachine : MonoBehaviour
 {
@@ -14,7 +13,7 @@ public class GameFlowStateMachine : MonoBehaviour
     public GameFlowState CurrentState { get; private set; } = GameFlowState.None;
     public GameFlowState PreviousState { get; private set; } = GameFlowState.None;
 
-    public event Action<GameFlowState, GameFlowState> OnStateChanged;
+    public static event Action<GameFlowState, GameFlowState> OnStateChanged;
     
     private void Awake()
     {
@@ -127,7 +126,7 @@ public class GameFlowStateMachine : MonoBehaviour
     private void EnterPrepare()
     {
         MDC.CreatNewMatchData();
-        MDC.ClearPreparedConsumables();
+        MDC.ClearCarriedItems();
         
         boardManager.BuildBoard();
         boardManager.ClearAllBlocks();

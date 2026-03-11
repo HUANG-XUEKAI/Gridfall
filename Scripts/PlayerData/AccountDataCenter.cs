@@ -11,7 +11,7 @@ public class AccountDataCenter : MonoBehaviour
     public PlayerAccountData.ProgressData Progress { get; private set; } = new();
     
     // 测试用
-    public List<ItemStack> initialConsumables = new();
+    public BasicItem initialItem;
 
     private void Awake()
     {
@@ -75,7 +75,8 @@ public class AccountDataCenter : MonoBehaviour
         AccountData.profile.tutorialFinished = false;
 
         // 测试用
-        AccountData.inventory.consumables = initialConsumables;
+        initialItem.quantity = 100;
+        AccountData.inventory.ownedItems[0] = initialItem;
         
         Profile = AccountData.profile;
         Inventory = AccountData.inventory;
@@ -162,57 +163,61 @@ public class AccountDataCenter : MonoBehaviour
         RaiseProfileChanged();
     }
     
-    public int GetConsumableCount(string itemId)
+    public bool AddItem(BasicItem item, int amount)
     {
-        if (Inventory == null || Inventory.consumables == null || string.IsNullOrEmpty(itemId))
-            return 0;
-
-        var stack = Inventory.consumables.Find(x => x.item.itemId == itemId);
-        return stack != null ? stack.count : 0;
-    }
-
-    public void AddConsumable(string itemId, int amount)
-    {
-        // TODO : 需要定义一个 所有ConsumableDefinition的Database，用来根据itemId拿到对应的ConsumableDefinition
+        if (Inventory == null || Inventory.ownedItems == null) return false;
+        if (item == null || string.IsNullOrEmpty(item.itemId) || amount <= 0) return false;
         
-        /*if (Inventory == null || Inventory.consumables == null) return;
-        if (string.IsNullOrEmpty(itemId) || amount <= 0) return;
-
-        var stack = Inventory.consumables.Find(x => x.item.itemId == itemId);
-        if (stack == null)
+        for (int i = 0; i < Inventory.ownedItems.Count; i++)
         {
-            stack = new InventoryItemStack
+            var ownedItem = Inventory.ownedItems[i];
+            if (ownedItem.itemId == item.itemId)
             {
-                itemId = itemId,
-                count = amount
-            };
-            Inventory.consumables.Add(stack);
+                if ((ownedItem.quantity + amount) >= ownedItem.maximumQuantity) 
+                    return false;
+                
+                ownedItem.quantity += amount;
+                SaveAccount();
+                GameEvents.RaiseInventoryItemsChanged();
+                return true;
+            }
         }
-        else
-        {
-            stack.count += amount;
-        }*/
 
+        item.quantity = amount;
+        Inventory.ownedItems.Add(Instantiate(item));
         SaveAccount();
-        GameEvents.RaiseInventoryChanged();
+        GameEvents.RaiseInventoryItemsChanged();
+        return true;
     }
 
-    public bool CostConsumable(string itemId, int amount)
+    public bool CostItem(BasicItem item, int amount)
     {
-        if (Inventory == null || Inventory.consumables == null) return false;
-        if (string.IsNullOrEmpty(itemId) || amount <= 0) return false;
+        if (Inventory == null || Inventory.ownedItems == null) return false;
+        if (item == null || string.IsNullOrEmpty(item.itemId) || amount <= 0) return false;
 
-        var stack = Inventory.consumables.Find(x => x.item.itemId == itemId);
-        if (stack == null || stack.count < amount)
-            return false;
+        for (int i = 0; i < Inventory.ownedItems.Count; i++)
+        {
+            var ownedItem = Inventory.ownedItems[i];
+            if (ownedItem.itemId == item.itemId)
+            {
+                if ((ownedItem.quantity - amount) <= 0) 
+                    return false;
+                
+                ownedItem.quantity -= amount;
+                SaveAccount();
+                GameEvents.RaiseInventoryItemsChanged();
+                return true;
+            }
+        }
 
-        stack.count -= amount;
+        return false;
+    }
 
-        if (stack.count <= 0)
-            Inventory.consumables.Remove(stack);
-
+    public void ResetInventory(List<BasicItem> items)
+    {
+        if (items == null || Inventory == null) return;
+        Inventory.ownedItems = items;
         SaveAccount();
-        GameEvents.RaiseInventoryChanged();
-        return true;
+        GameEvents.RaiseInventoryItemsChanged();
     }
 }
