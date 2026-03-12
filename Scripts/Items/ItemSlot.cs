@@ -1,3 +1,4 @@
+using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -10,7 +11,25 @@ public class ItemSlot : MonoBehaviour
     [SerializeField] private TextMeshProUGUI quantityText;
 
     public BasicItem Item { get; private set; }
-    public Button Button => button;
+    public event Action<ItemSlot> OnSlotClicked;
+
+    private void Awake()
+    {
+        if (button != null)
+            button.onClick.AddListener(HandleClick);
+    }
+
+    private void OnDestroy()
+    {
+        if (button != null)
+            button.onClick.RemoveListener(HandleClick);
+    }
+
+    private void HandleClick()
+    {
+        if (Item == null) return;
+        OnSlotClicked?.Invoke(this);
+    }
 
     public void Bind(BasicItem item)
     {
@@ -26,6 +45,9 @@ public class ItemSlot : MonoBehaviour
 
     public void RefreshView()
     {
+        if (Item != null && Item.quantity <= 0)
+            Item = null;
+
         bool hasItem = Item != null;
 
         if (iconImage != null)
@@ -34,27 +56,15 @@ public class ItemSlot : MonoBehaviour
             iconImage.sprite = hasItem ? Item.icon : null;
         }
 
-        if (quantityText != null && showQuantity)
+        if (quantityText != null)
         {
             if (showQuantity && hasItem)
-                quantityText.text = Item.quantity > 0 ? Item.quantity.ToString() : "";
+                quantityText.text = Item.quantity.ToString();
             else
                 quantityText.text = "";
         }
 
         if (button != null)
-        {
             button.interactable = hasItem;
-        }
-    }
-
-    public void SetClick(System.Action onClick)
-    {
-        if (button == null) return;
-
-        button.onClick.RemoveAllListeners();
-        
-        if (onClick != null)
-            button.onClick.AddListener(() => onClick());
     }
 }

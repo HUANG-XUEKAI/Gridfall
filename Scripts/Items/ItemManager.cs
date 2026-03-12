@@ -3,6 +3,8 @@ using UnityEngine;
 
 public class ItemManager : MonoBehaviour
 {
+    public static ItemManager Instance { get; private set; }
+    
     [SerializeField] private BasicItem[] itemsDatabase;
     private Dictionary<string, BasicItem> dict_ItemsDB;
     
@@ -11,6 +13,14 @@ public class ItemManager : MonoBehaviour
     
     private void Awake()
     {
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+
+        Instance = this;
+        
         InitItemsDictionary();
     }
     

@@ -22,16 +22,9 @@ public class BasicItem : ScriptableObject
     public Sprite icon;
     
     public int quantity;
-    public int maximumStack = 1;
+    public int maximumStack = 99;
     public int maximumQuantity = 999;
 
     public ItemEffect effect;
     public int effectValue = 1;
 }
-
-/*[Serializable]
-public class ItemStack
-{
-    public BasicItem item;
-    public int count;
-}*/

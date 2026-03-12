@@ -39,13 +39,21 @@ public class AccountDataCenter : MonoBehaviour
 
     private void LoadOrCreateAccount()
     {
-        var loaded = AccountLocalSave.LoadAccount();
+        var data = AccountLocalSave.LoadAccount();
 
-        if (loaded != null)
+        if (data != null)
         {
-            Profile = loaded.profile ?? new PlayerAccountData.ProfileData();
-            Inventory = loaded.inventory ?? new PlayerAccountData.InventoryData();
-            Progress = loaded.progress ?? new PlayerAccountData.ProgressData();
+            AccountData = data;
+            AccountData.inventory ??= new PlayerAccountData.InventoryData();
+            AccountData.profile ??= new PlayerAccountData.ProfileData();
+            AccountData.progress ??= new PlayerAccountData.ProgressData();
+
+            AccountData.inventory.ownedItems =
+                ConvertJsonDataToOwnedItems(AccountData.inventory.ownedItems_json);
+
+            Profile = AccountData.profile;
+            Inventory = AccountData.inventory;
+            Progress = AccountData.progress;
             return;
         }
 
@@ -55,12 +63,15 @@ public class AccountDataCenter : MonoBehaviour
     
     private void SaveAccount()
     {
-        AccountLocalSave.SaveAccount(new PlayerAccountData
+        Inventory.ownedItems_json = ConvertOwnedItemsToJsonData(Inventory.ownedItems);
+        PlayerAccountData data = new PlayerAccountData
         {
             profile = Profile,
             inventory = Inventory,
             progress = Progress
-        });
+        };
+        
+        AccountLocalSave.SaveAccount(data);
     }
 
 
@@ -75,8 +86,9 @@ public class AccountDataCenter : MonoBehaviour
         AccountData.profile.tutorialFinished = false;
 
         // 测试用
-        initialItem.quantity = 100;
-        AccountData.inventory.ownedItems[0] = initialItem;
+        BasicItem item = Instantiate(initialItem);
+        item.quantity = 99;
+        AccountData.inventory.ownedItems.Add(item);
         
         Profile = AccountData.profile;
         Inventory = AccountData.inventory;
@@ -85,7 +97,7 @@ public class AccountDataCenter : MonoBehaviour
 
     private void SaveProfile()
     {
-        AccountLocalSave.SaveAccount(AccountData);
+        SaveAccount();
     }
 
     private void RaiseProfileChanged()
@@ -173,7 +185,7 @@ public class AccountDataCenter : MonoBehaviour
             var ownedItem = Inventory.ownedItems[i];
             if (ownedItem.itemId == item.itemId)
             {
-                if ((ownedItem.quantity + amount) >= ownedItem.maximumQuantity) 
+                if ((ownedItem.quantity + amount) > ownedItem.maximumStack) 
                     return false;
                 
                 ownedItem.quantity += amount;
@@ -200,10 +212,14 @@ public class AccountDataCenter : MonoBehaviour
             var ownedItem = Inventory.ownedItems[i];
             if (ownedItem.itemId == item.itemId)
             {
-                if ((ownedItem.quantity - amount) <= 0) 
+                if (ownedItem.quantity < amount)
                     return false;
                 
                 ownedItem.quantity -= amount;
+                
+                if (ownedItem.quantity == 0)
+                    Inventory.ownedItems.RemoveAt(i);
+                
                 SaveAccount();
                 GameEvents.RaiseInventoryItemsChanged();
                 return true;
@@ -220,4 +236,56 @@ public class AccountDataCenter : MonoBehaviour
         SaveAccount();
         GameEvents.RaiseInventoryItemsChanged();
     }
+    
+    #region List<ItemOwnedData>、List<BasicItem>转换
+    public static List<PlayerAccountData.ItemOwnedData> ConvertOwnedItemsToJsonData(List<BasicItem> runtimeItems)
+    {
+        List<PlayerAccountData.ItemOwnedData> result = new();
+
+        if (runtimeItems == null) return result;
+
+        foreach (BasicItem item in runtimeItems)
+        {
+            if (item == null) continue;
+            if (string.IsNullOrEmpty(item.itemId)) continue;
+            if (item.quantity <= 0) continue;
+
+            result.Add(new PlayerAccountData.ItemOwnedData
+            {
+                itemId = item.itemId,
+                quantity = item.quantity
+            });
+        }
+
+        return result;
+    }
+    
+    public static List<BasicItem> ConvertJsonDataToOwnedItems(List<PlayerAccountData.ItemOwnedData> jsonItems)
+    {
+        List<BasicItem> result = new();
+
+        if (jsonItems == null) return result;
+        if (ItemManager.Instance == null) return result;
+
+        foreach (PlayerAccountData.ItemOwnedData data in jsonItems)
+        {
+            if (data == null) continue;
+            if (string.IsNullOrEmpty(data.itemId)) continue;
+            if (data.quantity <= 0) continue;
+
+            BasicItem itemDef = ItemManager.Instance.GetItemById(data.itemId);
+            if (itemDef == null)
+            {
+                Debug.LogWarning($"找不到 itemId = {data.itemId} 对应的 BasicItem");
+                continue;
+            }
+
+            BasicItem runtimeItem = Instantiate(itemDef);
+            runtimeItem.quantity = data.quantity;
+            result.Add(runtimeItem);
+        }
+
+        return result;
+    }
+    #endregion
 }

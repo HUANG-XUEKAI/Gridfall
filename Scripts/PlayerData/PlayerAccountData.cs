@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using UnityEngine.Serialization;
 
 [Serializable]
 public class PlayerAccountData
@@ -26,9 +25,20 @@ public class PlayerAccountData
     [Serializable]
     public class InventoryData
     {
+        [NonSerialized]
         public List<BasicItem> ownedItems = new();
+        
+        public List<ItemOwnedData> ownedItems_json = new();
+        
         public List<string> ownedCardSkinIds = new();
         public List<string> ownedBoardSkinIds = new();
+    }
+    
+    [Serializable]
+    public class ItemOwnedData
+    {
+        public string itemId;
+        public int quantity;
     }
 
     [Serializable]

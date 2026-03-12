@@ -36,7 +36,7 @@ RectTransform:
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 30, y: 30}
+  m_SizeDelta: {x: 37.69, y: 30}
   m_Pivot: {x: 1, y: 0}
 --- !u!222 &2013610705936175757
 CanvasRenderer:
@@ -66,7 +66,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 1
+  m_text: 99
   m_enableAdvanceTextProcess: 0
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -427,4 +427,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   button: {fileID: 3601616014521867336}
   iconImage: {fileID: 1617560537617203452}
-  countText: {fileID: 0}
+  showQuantity: 1
+  quantityText: {fileID: 7955206627109285316}

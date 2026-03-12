@@ -13,8 +13,12 @@ MonoBehaviour:
   m_Name: CB_002
   m_EditorClassIdentifier: 
   itemId: CB_002
+  itemClass: 0
   displayName: Bomb
   description: 
-  icon: {fileID: 21300000, guid: a980001c9d288534f9b7439fa4989647, type: 3}
-  effectType: 2
+  icon: {fileID: 21300000, guid: 9d75391b3ffe3cf41831ea7726440e98, type: 3}
+  quantity: 1
+  maximumStack: 99
+  maximumQuantity: 999
+  effect: 0
   effectValue: 1

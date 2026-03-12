@@ -27,7 +27,7 @@ public static class AccountLocalSave
 
         return JsonUtility.FromJson<PlayerAccountData>(json);
     }
-
+    
     public static bool HasAccountSave()
     {
         return File.Exists(FilePath);
