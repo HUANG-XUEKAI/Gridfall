@@ -176,7 +176,7 @@ public class MatchDataCenter : MonoBehaviour
     {
         if (CurrentMatch == null) return;
 
-        int clampedIndex = Mathf.Clamp(index, 0, MatchData.MaxCarriedCount -1);
+        int clampedIndex = Mathf.Clamp(index, 0, MatchData.MaxCarriedCount - 1);
         CurrentMatch.carriedItems[clampedIndex] = null;
         
         GameEvents.RaiseCarriedItemsChanged();

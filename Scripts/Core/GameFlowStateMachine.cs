@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using UnityEngine;
 
 public class GameFlowStateMachine : MonoBehaviour
@@ -138,6 +139,8 @@ public class GameFlowStateMachine : MonoBehaviour
         handManager.ResetHand();
         boardManager.StartSpawning();
         boardManager.ClearAllHighlights();
+        
+        Debug.Log(string.Join(", ", ADC.Inventory.ownedItems.Select(x => x.itemId)));
     }
     
     private void EnterGameOver()
@@ -184,6 +187,7 @@ public class GameFlowStateMachine : MonoBehaviour
 
     private void ExitGamePlay()
     {
+        ReturnUnusedItems();
         MDC.ResumeMatch();
         boardManager.ClearAllHighlights();
         boardManager.StopSpawning();
@@ -193,6 +197,23 @@ public class GameFlowStateMachine : MonoBehaviour
     {
         boardManager.ClearAllBlocks();
         handManager.ResetHand();
+    }
+    
+    private void ReturnUnusedItems()
+    {
+        if (MDC == null || MDC.CurrentMatch == null) return;
+        if (ADC == null || ADC.Inventory == null) return;
+        if (MDC.CurrentMatch.carriedItems == null) return;
+
+        for (int i = 0; i < MDC.CurrentMatch.carriedItems.Length; i++)
+        {
+            BasicItem item = MDC.CurrentMatch.carriedItems[i];
+            if (item == null) continue;
+
+            ADC.AddItem(item, 1);
+        }
+
+        MDC.ClearCarriedItems();
     }
 
     public bool IsInState(GameFlowState state) => CurrentState == state;

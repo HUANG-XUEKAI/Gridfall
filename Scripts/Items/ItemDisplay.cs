@@ -15,7 +15,6 @@ public class ItemDisplay : MonoBehaviour
     [SerializeField] private CanvasGroup page3Root;
     
     private List<BasicItem> inventoryForDisplay = new();
-    //private BasicItem[] carriedForDisplay = new BasicItem[MatchData.MaxCarriedCount];
     
     [Header("Gameplay")]
     [SerializeField] private ItemSlot[] carrySlotsInGame = new ItemSlot[MatchData.MaxCarriedCount]; //先不管
@@ -84,7 +83,9 @@ public class ItemDisplay : MonoBehaviour
             }
             case GameFlowState.GamePlay:
             {
-                
+                RegisterGamePlaySlotsEvent();
+                FillInSlotsInGame();
+                UpdateGamePlaySlotsDisplay();
                 break;
             }
         }
@@ -99,9 +100,15 @@ public class ItemDisplay : MonoBehaviour
                 UnregisterPrepareSlotsEvent();
                 return;
             }
+            case GameFlowState.GamePlay:
+            {
+                UnregisterGamePlaySlotsEvent();
+                return;
+            }
         }
     }
-    
+
+    #region Prepare
     private void BuildDisplayData()
     {
         // 重置 inventoryForDisplay：从 ADC.Inventory.ownedItems 拷贝一份
@@ -322,6 +329,89 @@ public class ItemDisplay : MonoBehaviour
         }
         MDC.ResetCarriedItems(appliedItems);
     }
+    #endregion
+    
+    #region GamePlay
+    private void FillInSlotsInGame()
+    {
+        for (int i = 0; i < carrySlotsInGame.Length; i++)
+        {
+            ItemSlot slot = carrySlotsInGame[i];
+            if (slot == null) continue;
+
+            BasicItem item = null;
+
+            if (MDC != null &&
+                MDC.CurrentMatch != null &&
+                MDC.CurrentMatch.carriedItems != null &&
+                i < MDC.CurrentMatch.carriedItems.Length)
+            {
+                item = MDC.CurrentMatch.carriedItems[i];
+            }
+
+            if (item == null)
+                slot.SetEmpty();
+            else
+                slot.Bind(item);
+        }
+    }
+
+    private void RegisterGamePlaySlotsEvent()
+    {
+        foreach (var slot in carrySlotsInGame)
+        {
+            if (slot == null) continue;
+            slot.OnSlotClicked -= HandleGamePlaySlotClicked;
+            slot.OnSlotClicked += HandleGamePlaySlotClicked;
+        }
+    }
+
+    private void UnregisterGamePlaySlotsEvent()
+    {
+        foreach (var slot in carrySlotsInGame)
+        {
+            if (slot == null) continue;
+            slot.OnSlotClicked -= HandleGamePlaySlotClicked;
+        }
+    }
+
+    private void HandleGamePlaySlotClicked(ItemSlot slot)
+    {
+        int slotIndex = FindSlotIndex(carrySlotsInGame, slot);
+        if (slotIndex < 0) return;
+        if (ItemManager.Instance == null) return;
+
+        bool used = ItemManager.Instance.TryUseCarriedItem(slotIndex);
+
+        if (!used)
+            return;
+
+        FillInSlotsInGame();
+        UpdateGamePlaySlotsDisplay();
+    }
+
+    private void UpdateGamePlaySlotsDisplay()
+    {
+        foreach (var slot in carrySlotsInGame)
+        {
+            if (slot == null) continue;
+            slot.RefreshView();
+        }
+    }
+
+    private int FindSlotIndex(ItemSlot[] slots, ItemSlot target)
+    {
+        if (slots == null || target == null) return -1;
+
+        for (int i = 0; i < slots.Length; i++)
+        {
+            if (slots[i] == target)
+                return i;
+        }
+
+        return -1;
+    }
+    #endregion
     
     // =========================
     // 你可以加的小工具方法写在下面

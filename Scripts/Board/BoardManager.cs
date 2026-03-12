@@ -5,6 +5,8 @@ using UnityEngine;
 
 public class BoardManager : MonoBehaviour
 {
+    public static BoardManager Instance { get; private set; }
+    
     [Header("Size")]
     [SerializeField] private int width = 8;
     [SerializeField] private int height = 8;
@@ -39,6 +41,14 @@ public class BoardManager : MonoBehaviour
 
     void Awake()
     {
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+
+        Instance = this;
+        
         blockDB.InitializeNormalBlocks();
     }
     
@@ -265,4 +275,61 @@ public class BoardManager : MonoBehaviour
         foreach (var p in cells)
             this.cells[p.x, p.y].SetHighlighted(true);
     }
+
+    #region Effect
+    public bool TryBombRandom3x3()
+    {
+        if (blocks == null || cells == null)
+            return false;
+
+        List<Vector2Int> occupiedCells = GetAllOccupiedCells();
+        if (occupiedCells.Count == 0)
+            return false;
+
+        int randomIndex = UnityEngine.Random.Range(0, occupiedCells.Count);
+        Vector2Int center = occupiedCells[randomIndex];
+
+        int clearedCount = ClearArea(center.x - 1, center.x + 1, center.y - 1, center.y + 1);
+        return clearedCount > 0;
+    }
+
+    private List<Vector2Int> GetAllOccupiedCells()
+    {
+        List<Vector2Int> list = new();
+
+        if (blocks == null)
+            return list;
+
+        for (int y = 0; y < height; y++)
+        for (int x = 0; x < width; x++)
+        {
+            if (blocks[x, y] != null)
+                list.Add(new Vector2Int(x, y));
+        }
+
+        return list;
+    }
+
+    private int ClearArea(int minX, int maxX, int minY, int maxY)
+    {
+        int clearedCount = 0;
+
+        int clampedMinX = Mathf.Clamp(minX, 0, width - 1);
+        int clampedMaxX = Mathf.Clamp(maxX, 0, width - 1);
+        int clampedMinY = Mathf.Clamp(minY, 0, height - 1);
+        int clampedMaxY = Mathf.Clamp(maxY, 0, height - 1);
+
+        for (int y = clampedMinY; y <= clampedMaxY; y++)
+        for (int x = clampedMinX; x <= clampedMaxX; x++)
+        {
+            if (blocks[x, y] == null)
+                continue;
+
+            Clear(x, y);
+            clearedCount++;
+        }
+
+        return clearedCount;
+    }
+    #endregion
 }

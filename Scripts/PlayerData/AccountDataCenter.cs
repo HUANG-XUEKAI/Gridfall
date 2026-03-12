@@ -13,6 +13,7 @@ public class AccountDataCenter : MonoBehaviour
     
     // 测试用
     public BasicItem initialItem;
+    public BasicItem initialItem2;
 
     private void Awake()
     {
@@ -91,8 +92,11 @@ public class AccountDataCenter : MonoBehaviour
 
         // 测试用
         BasicItem item = Instantiate(initialItem);
+        BasicItem item2 = Instantiate(initialItem2);
         item.quantity = 99;
+        item2.quantity = 99;
         AccountData.inventory.ownedItems.Add(item);
+        AccountData.inventory.ownedItems.Add(item2);
         
         Profile = AccountData.profile;
         Inventory = AccountData.inventory;

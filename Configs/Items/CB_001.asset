@@ -20,5 +20,5 @@ MonoBehaviour:
   quantity: 1
   maximumStack: 99
   maximumQuantity: 999
-  effect: 0
+  effect: 1
   effectValue: 1
