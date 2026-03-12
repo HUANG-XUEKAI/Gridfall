@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 public class AccountDataCenter : MonoBehaviour
 {
@@ -27,14 +28,19 @@ public class AccountDataCenter : MonoBehaviour
     
     private void Start()
     {
+        BuildRuntimeInventoryFromJson();
         NotifyProfileLoaded();
-        
-        /*// 调试代码
-        AddConsumable("hp_potion", 3);
-        AddConsumable("bomb_3x3", 1);
+    }
+    
+    private void BuildRuntimeInventoryFromJson()
+    {
+        if (Inventory == null)
+            Inventory = new PlayerAccountData.InventoryData();
 
-        Debug.Log(GetConsumableCount("hp_potion"));
-        Debug.Log(GetConsumableCount("bomb_3x3"));*/
+        Inventory.ownedItems =
+            ConvertJsonDataToOwnedItems(Inventory.ownedItems_json);
+
+        Debug.Log(string.Join(", ", Inventory.ownedItems.Select(x => x.itemId)));
     }
 
     private void LoadOrCreateAccount()
@@ -47,13 +53,11 @@ public class AccountDataCenter : MonoBehaviour
             AccountData.inventory ??= new PlayerAccountData.InventoryData();
             AccountData.profile ??= new PlayerAccountData.ProfileData();
             AccountData.progress ??= new PlayerAccountData.ProgressData();
-
-            AccountData.inventory.ownedItems =
-                ConvertJsonDataToOwnedItems(AccountData.inventory.ownedItems_json);
-
+            
             Profile = AccountData.profile;
             Inventory = AccountData.inventory;
             Progress = AccountData.progress;
+            
             return;
         }
 

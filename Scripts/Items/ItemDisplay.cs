@@ -57,28 +57,49 @@ public class ItemDisplay : MonoBehaviour
     private void OnEnable()
     {
         GameFlowStateMachine.OnStateChanged += BuildInventoryDisplay;
-        RegisterPrepareSlotsEvent();
     }
 
     private void OnDisable()
     {
         GameFlowStateMachine.OnStateChanged -= BuildInventoryDisplay;
-        UnregisterPrepareSlotsEvent();
     }
     
     private void BuildInventoryDisplay(GameFlowState oldState, GameFlowState newState)
+    {
+        EnterNewState(newState);
+        ExitOldState(oldState);
+    }
+
+    void EnterNewState(GameFlowState newState)
     {
         switch (newState)
         {
             case GameFlowState.Prepare:
             {
+                RegisterPrepareSlotsEvent();
                 BuildDisplayData();
                 FillInSlotsInPrepare();
                 UpdatePrepareSlotsDisplay();
+                break;
+            }
+            case GameFlowState.GamePlay:
+            {
+                
+                break;
+            }
+        }
+    }
+
+    void ExitOldState(GameFlowState oldState)
+    {
+        switch (oldState)
+        {
+            case GameFlowState.Prepare:
+            {
+                UnregisterPrepareSlotsEvent();
                 return;
             }
         }
-        // 之后再做其他状态
     }
     
     private void BuildDisplayData()
