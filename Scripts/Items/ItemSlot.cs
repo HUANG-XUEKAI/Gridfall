@@ -12,7 +12,7 @@ public class ItemSlot : MonoBehaviour
     public BasicItem Item { get; private set; }
     public Button Button => button;
 
-    public void Bind(BasicItem item, int count)
+    public void Bind(BasicItem item)
     {
         Item = item;
         RefreshView();
@@ -36,7 +36,10 @@ public class ItemSlot : MonoBehaviour
 
         if (quantityText != null && showQuantity)
         {
-            quantityText.text = hasItem ? Item.quantity.ToString() : "";
+            if (showQuantity && hasItem)
+                quantityText.text = Item.quantity > 0 ? Item.quantity.ToString() : "";
+            else
+                quantityText.text = "";
         }
 
         if (button != null)
@@ -50,6 +53,7 @@ public class ItemSlot : MonoBehaviour
         if (button == null) return;
 
         button.onClick.RemoveAllListeners();
+        
         if (onClick != null)
             button.onClick.AddListener(() => onClick());
     }
