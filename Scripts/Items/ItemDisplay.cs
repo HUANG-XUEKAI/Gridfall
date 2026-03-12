@@ -11,9 +11,9 @@ public class ItemDisplay : MonoBehaviour
     [SerializeField] private ItemSlot[] inventorySlotsInPrepare1 = new ItemSlot[9];
     [SerializeField] private ItemSlot[] inventorySlotsInPrepare2 = new ItemSlot[9];
     [SerializeField] private ItemSlot[] inventorySlotsInPrepare3 = new ItemSlot[9];
-    [SerializeField] private CanvasGroup page1Root;
-    [SerializeField] private CanvasGroup page2Root;
-    [SerializeField] private CanvasGroup page3Root;
+    [SerializeField] private CanvasGroup preparePage1Root;
+    [SerializeField] private CanvasGroup preparePage2Root;
+    [SerializeField] private CanvasGroup preparePage3Root;
     
     private List<BasicItem> inventoryForDisplay;
     
@@ -22,6 +22,7 @@ public class ItemDisplay : MonoBehaviour
     
     [Header("Shopping")]
     [SerializeField] private ItemSlot[] itemSlotsInShopping1;
+    [SerializeField] private CanvasGroup shoppingPage1Root;
     
     [Header("Prefabs")]
     [SerializeField] private ItemSlot itemSlotPrefab;
@@ -158,9 +159,9 @@ public class ItemDisplay : MonoBehaviour
         // 先只做第一页 inventorySlotsInPrepare1，另外的 inventorySlotsInPrepare2 和 inventorySlotsInPrepare3 先放着不管
         // 如果 inventoryForDisplay 超过了 inventorySlotsInPrepare1 先按不显示处理就好，之后再做多页逻辑
         
-        SetPageVisible(page1Root, true);
-        SetPageVisible(page2Root, false);
-        SetPageVisible(page3Root, false);
+        SetPageVisible(preparePage1Root, true);
+        SetPageVisible(preparePage2Root, false);
+        SetPageVisible(preparePage3Root, false);
 
         foreach (var slot in inventorySlotsInPrepare1)
         {

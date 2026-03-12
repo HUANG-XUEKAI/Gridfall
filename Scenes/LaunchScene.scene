@@ -10523,9 +10523,9 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
-  page1Root: {fileID: 369979276}
-  page2Root: {fileID: 1358800360}
-  page3Root: {fileID: 791059941}
+  preparePage1Root: {fileID: 369979276}
+  preparePage2Root: {fileID: 1358800360}
+  preparePage3Root: {fileID: 791059941}
   carrySlotsInGame:
   - {fileID: 359794131}
   - {fileID: 692953057}
@@ -10539,6 +10539,7 @@ MonoBehaviour:
   - {fileID: 2064859663}
   - {fileID: 187225677}
   - {fileID: 1886568964}
+  shoppingPage1Root: {fileID: 1651398559}
   itemSlotPrefab: {fileID: 4362316667484692500, guid: 24c4e54a39763f342b276cc60025b689, type: 3}
   purchasePopup: {fileID: 0}
 --- !u!4 &1850083896
