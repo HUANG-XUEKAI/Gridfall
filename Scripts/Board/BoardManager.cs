@@ -132,7 +132,7 @@ public class BoardManager : MonoBehaviour
             int damage = ResolveFullLinesAndClear();
             if (damage > 0)
             {
-                GameEvents.RaiseBoardResolved(new BoardResolvedEvent
+                GameEvents.RaiseBoardResolved(new GameEvents.BoardResolvedEvent
                 {
                     pattern = CardPattern.None,
                     clearedCellCount = 0,

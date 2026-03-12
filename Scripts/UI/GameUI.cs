@@ -40,25 +40,25 @@ public class GameUI : MonoBehaviour
         RefreshHPText(MatchData.DefaultHP);
     }
 
-    private void OnGameStarted(GameStartedEvent e)
+    private void OnGameStarted(GameEvents.GameStartedEvent e)
     {
         RefreshHPText(e.defaultHP);
         RefreshScoreText(e.defaultScore);
     }
     
-    private void OnProfileChanged(ProfileChangedEvent e)
+    private void OnProfileChanged(GameEvents.ProfileChangedEvent e)
     {
         RefreshEnergyText(e.energy);
         RefreshGoldText(e.gold);
         RefreshDiamondText(e.diamond);
     }
 
-    private void OnHPChanged(HPChangedEvent e)
+    private void OnHPChanged(GameEvents.HPChangedEvent e)
     {
         RefreshHPText(e.currentHP);
     }
 
-    private void OnScoreChanged(ScoreChangedEvent e)
+    private void OnScoreChanged(GameEvents.ScoreChangedEvent e)
     {
         RefreshScoreText(e.currentScore);
     }

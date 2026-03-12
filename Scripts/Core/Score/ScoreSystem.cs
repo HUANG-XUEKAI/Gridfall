@@ -19,7 +19,7 @@ public class ScoreSystem : MonoBehaviour
         GameEvents.GameOver -= OnGameOver;
     }
     
-    private void OnBoardResolved(BoardResolvedEvent e)
+    private void OnBoardResolved(GameEvents.BoardResolvedEvent e)
     {
         if (scoreConfig == null) return;
         if (e.pattern == CardPattern.None) return;
@@ -33,7 +33,7 @@ public class ScoreSystem : MonoBehaviour
         MDC.AddScore(amount, $"消除得分：{e.clearedBaseScore} x {multiplier}");
     }
 
-    private void OnGameOver(GameOverEvent e)
+    private void OnGameOver(GameEvents.GameOverEvent e)
     {
         if (MDC.CurrentMatch.currentScore > ADC.Profile.bestScore)
         {

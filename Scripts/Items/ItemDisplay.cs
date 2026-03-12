@@ -14,7 +14,7 @@ public class ItemDisplay : MonoBehaviour
     [SerializeField] private CanvasGroup page2Root;
     [SerializeField] private CanvasGroup page3Root;
     
-    private List<BasicItem> inventoryForDisplay = new();
+    private List<BasicItem> inventoryForDisplay;
     
     [Header("Gameplay")]
     [SerializeField] private ItemSlot[] carrySlotsInGame = new ItemSlot[MatchData.MaxCarriedCount]; //先不管
@@ -55,12 +55,12 @@ public class ItemDisplay : MonoBehaviour
 
     private void OnEnable()
     {
-        GameFlowStateMachine.OnStateChanged += BuildInventoryDisplay;
+        GameEvents.OnStateChanged += BuildInventoryDisplay;
     }
 
     private void OnDisable()
     {
-        GameFlowStateMachine.OnStateChanged -= BuildInventoryDisplay;
+        GameEvents.OnStateChanged -= BuildInventoryDisplay;
     }
     
     private void BuildInventoryDisplay(GameFlowState oldState, GameFlowState newState)
@@ -75,14 +75,15 @@ public class ItemDisplay : MonoBehaviour
         {
             case GameFlowState.Prepare:
             {
-                RegisterPrepareSlotsEvent();
                 BuildDisplayData();
+                RegisterPrepareSlotsEvent();
                 FillInSlotsInPrepare();
                 UpdatePrepareSlotsDisplay();
                 break;
             }
             case GameFlowState.GamePlay:
             {
+                ApplyCarried();
                 RegisterGamePlaySlotsEvent();
                 FillInSlotsInGame();
                 UpdateGamePlaySlotsDisplay();
@@ -97,6 +98,7 @@ public class ItemDisplay : MonoBehaviour
         {
             case GameFlowState.Prepare:
             {
+                ClearPrepareData();
                 UnregisterPrepareSlotsEvent();
                 return;
             }
@@ -112,7 +114,7 @@ public class ItemDisplay : MonoBehaviour
     private void BuildDisplayData()
     {
         // 重置 inventoryForDisplay：从 ADC.Inventory.ownedItems 拷贝一份
-        inventoryForDisplay.Clear();
+        inventoryForDisplay = new List<BasicItem>();
 
         if (ADC != null &&
             ADC.Inventory != null &&
@@ -314,7 +316,7 @@ public class ItemDisplay : MonoBehaviour
         carrySlot.SetEmpty();
     }
     
-    public void ApplyCarried()
+    void ApplyCarried()
     {
         //ApplyCarried 表示当前选择道具流程结束了，所以 inventoryForDisplay 也完成了它的使命，
         //直接将他赋给 ADC.Inventory.ownedItems就行，
@@ -325,9 +327,25 @@ public class ItemDisplay : MonoBehaviour
         BasicItem[] appliedItems = new BasicItem[MatchData.MaxCarriedCount];
         for (int i = 0; i < MatchData.MaxCarriedCount; i++)
         {
-            appliedItems[i] = carrySlotsInPrepare[i] != null ? carrySlotsInPrepare[i].Item : null;
+            if (carrySlotsInPrepare[i].IsEmpty()) continue;
+            appliedItems[i] = carrySlotsInPrepare[i].Item;
         }
         MDC.ResetCarriedItems(appliedItems);
+    }
+
+    void ClearPrepareData()
+    {
+        inventoryForDisplay = null;
+        
+        foreach (var slot in inventorySlotsInPrepare1)
+        {
+            slot.SetEmpty();
+        }
+
+        foreach (var slot in carrySlotsInPrepare)
+        {
+            slot.SetEmpty();
+        }
     }
     #endregion
     

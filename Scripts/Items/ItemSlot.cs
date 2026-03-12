@@ -67,4 +67,9 @@ public class ItemSlot : MonoBehaviour
         if (button != null)
             button.interactable = hasItem;
     }
+
+    public bool IsEmpty()
+    {
+        return Item == null;
+    }
 }

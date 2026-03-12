@@ -2,6 +2,10 @@ using System;
 
 public static class GameEvents
 {
+    public static event Action<GameFlowState, GameFlowState> OnStateChanged;
+    public static void RaiseStateChanged(GameFlowState oldState, GameFlowState newState) 
+        => OnStateChanged?.Invoke(oldState, newState);
+    
     public static event Action<CardPlayedEvent> CardPlayed;
     public static void RaiseCardPlayed(CardPlayedEvent e) => CardPlayed?.Invoke(e);
     
@@ -35,58 +39,58 @@ public static class GameEvents
     public static event Action CarriedItemsChanged;
     public static void RaiseCarriedItemsChanged()
         => CarriedItemsChanged?.Invoke();
-}
+    
+    public class GameStartedEvent
+    {
+        public int defaultHP = MatchData.DefaultHP;
+        public int defaultScore = 0;
+        // TODO : 本局所携带的道具
+    }
+    
+    public class CardPlayedEvent
+    {
+        public CardPattern pattern;
+        public BasicPattern activeShape;
+        public int normalCardCount;
+        public int specialCardCount;
+    }
 
-public class GameStartedEvent
-{
-    public int defaultHP = MatchData.DefaultHP;
-    public int defaultScore = 0;
-    // TODO : 本局所携带的道具
-}
+    public class BoardResolvedEvent
+    {
+        public CardPattern pattern;
+        public int clearedCellCount;
+        public int clearedLineCount;
+        public int clearedBaseScore;
+    }
 
-public class CardPlayedEvent
-{
-    public CardPattern pattern;
-    public BasicPattern activeShape;
-    public int normalCardCount;
-    public int specialCardCount;
-}
+    public class HPChangedEvent
+    {
+        public int currentHP;
+        public int delta;
+    }
 
-public class BoardResolvedEvent
-{
-    public CardPattern pattern;
-    public int clearedCellCount;
-    public int clearedLineCount;
-    public int clearedBaseScore;
-}
+    public class SpecialEffectEvent
+    {
+        public BasicCard sourceCard;
+        public string effectName;
+    }
 
-public class HPChangedEvent
-{
-    public int currentHP;
-    public int delta;
-}
+    public class GameOverEvent
+    {
+        public int finalScore;
+    }
 
-public class SpecialEffectEvent
-{
-    public BasicCard sourceCard;
-    public string effectName;
-}
+    public class ScoreChangedEvent
+    {
+        public int currentScore;
+        public int delta;
+        public string reason;
+    }
 
-public class GameOverEvent
-{
-    public int finalScore;
-}
-
-public class ScoreChangedEvent
-{
-    public int currentScore;
-    public int delta;
-    public string reason;
-}
-
-public class ProfileChangedEvent
-{
-    public int energy;
-    public int gold;
-    public int diamond;
+    public class ProfileChangedEvent
+    {
+        public int energy;
+        public int gold;
+        public int diamond;
+    }
 }

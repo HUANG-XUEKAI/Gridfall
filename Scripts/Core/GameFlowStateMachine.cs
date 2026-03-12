@@ -13,8 +13,6 @@ public class GameFlowStateMachine : MonoBehaviour
 
     public GameFlowState CurrentState { get; private set; } = GameFlowState.None;
     public GameFlowState PreviousState { get; private set; } = GameFlowState.None;
-
-    public static event Action<GameFlowState, GameFlowState> OnStateChanged;
     
     private void Awake()
     {
@@ -59,7 +57,7 @@ public class GameFlowStateMachine : MonoBehaviour
         GameEvents.GameOver -= OnGameOver;
     }
 
-    private void OnGameOver(GameOverEvent e)
+    private void OnGameOver(GameEvents.GameOverEvent e)
     {
         ChangeState(GameFlowState.GameOver);
     }
@@ -77,7 +75,7 @@ public class GameFlowStateMachine : MonoBehaviour
 
         EnterState(newState);
 
-        OnStateChanged?.Invoke(oldState, newState);
+        GameEvents.RaiseStateChanged(oldState, newState);
     }
 
     private void EnterState(GameFlowState state)

@@ -41,7 +41,7 @@ public class AccountDataCenter : MonoBehaviour
         Inventory.ownedItems =
             ConvertJsonDataToOwnedItems(Inventory.ownedItems_json);
 
-        Debug.Log(string.Join(", ", Inventory.ownedItems.Select(x => x.itemId)));
+        //Debug.Log(string.Join(", ", Inventory.ownedItems.Select(x => x.itemId)));
     }
 
     private void LoadOrCreateAccount()
@@ -110,7 +110,7 @@ public class AccountDataCenter : MonoBehaviour
 
     private void RaiseProfileChanged()
     {
-        GameEvents.RaiseProfileChanged(new ProfileChangedEvent
+        GameEvents.RaiseProfileChanged(new GameEvents.ProfileChangedEvent
         {
             energy = Profile.energy,
             gold = Profile.gold,

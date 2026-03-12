@@ -34,14 +34,14 @@ public class MatchDataCenter : MonoBehaviour
     {
         CurrentMatch.isGaming = true;
         
-        GameEvents.RaiseGameStared(new GameStartedEvent());
+        GameEvents.RaiseGameStared(new GameEvents.GameStartedEvent());
     }
 
     public void EndMatch()
     {
         CurrentMatch.isGaming = false;
         
-        GameEvents.RaiseGameOver(new GameOverEvent
+        GameEvents.RaiseGameOver(new GameEvents.GameOverEvent
         {
             finalScore = CurrentMatch.currentScore,
         });
@@ -70,7 +70,7 @@ public class MatchDataCenter : MonoBehaviour
         if (amount <= 0) return;
         CurrentMatch.currentScore += amount;
         
-        GameEvents.RaiseScoreChanged(new ScoreChangedEvent
+        GameEvents.RaiseScoreChanged(new GameEvents.ScoreChangedEvent
         {
             currentScore = CurrentMatch.currentScore,
             delta = amount,
@@ -82,7 +82,7 @@ public class MatchDataCenter : MonoBehaviour
     {
         CurrentMatch.currentScore = 0;
         
-        GameEvents.RaiseScoreChanged(new ScoreChangedEvent
+        GameEvents.RaiseScoreChanged(new GameEvents.ScoreChangedEvent
         {
             currentScore = 0,
             delta = 0,
@@ -105,7 +105,7 @@ public class MatchDataCenter : MonoBehaviour
             EndMatch();
         }
         
-        GameEvents.RaiseHPChanged(new HPChangedEvent
+        GameEvents.RaiseHPChanged(new GameEvents.HPChangedEvent
         {
             currentHP = CurrentMatch.currentHP,
             delta = delta
@@ -123,7 +123,7 @@ public class MatchDataCenter : MonoBehaviour
         );
         int delta = CurrentMatch.currentHP - oldHP;
         
-        GameEvents.RaiseHPChanged(new HPChangedEvent
+        GameEvents.RaiseHPChanged(new GameEvents.HPChangedEvent
         {
             currentHP = CurrentMatch.currentHP,
             delta = delta

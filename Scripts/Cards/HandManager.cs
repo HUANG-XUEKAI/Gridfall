@@ -130,7 +130,7 @@ public class HandManager : MonoBehaviour
 
                 if (execResult.success)
                 {
-                    GameEvents.RaiseBoardResolved(new BoardResolvedEvent
+                    GameEvents.RaiseBoardResolved(new GameEvents.BoardResolvedEvent
                     {
                         pattern = currentPattern,
                         clearedCellCount = execResult.clearedCellCount,
@@ -138,7 +138,7 @@ public class HandManager : MonoBehaviour
                         clearedBaseScore = execResult.clearedBaseScore
                     });
 
-                    GameEvents.RaiseCardPlayed(new CardPlayedEvent
+                    GameEvents.RaiseCardPlayed(new GameEvents.CardPlayedEvent
                     {
                         pattern = currentPlayContext != null ? currentPlayContext.basePattern : CardPattern.None,
                         activeShape = currentPlayContext != null ? currentPlayContext.activePattern : null,
@@ -258,7 +258,7 @@ public class HandManager : MonoBehaviour
             {
                 effect.Execute(effectContext);
 
-                GameEvents.RaiseEffectExecuted(new SpecialEffectEvent
+                GameEvents.RaiseEffectExecuted(new GameEvents.SpecialEffectEvent
                 {
                     sourceCard = cv.Card,
                     effectName = effect.name
@@ -424,7 +424,7 @@ public class HandManager : MonoBehaviour
 
         if (execResult.success)
         {
-            GameEvents.RaiseBoardResolved(new BoardResolvedEvent
+            GameEvents.RaiseBoardResolved(new GameEvents.BoardResolvedEvent
             {
                 pattern = currentPattern,
                 clearedCellCount = execResult.clearedCellCount,
@@ -445,7 +445,7 @@ public class HandManager : MonoBehaviour
             ExecuteSpecialEffects(currentPlayContext, new Vector2Int(x, y));
         }
         
-        GameEvents.RaiseCardPlayed(new CardPlayedEvent
+        GameEvents.RaiseCardPlayed(new GameEvents.CardPlayedEvent
         {
             pattern = currentPlayContext != null ? currentPlayContext.basePattern : CardPattern.None,
             activeShape = currentPlayContext != null ? currentPlayContext.activePattern : null,
