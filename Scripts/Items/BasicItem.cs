@@ -1,5 +1,4 @@
 using UnityEngine;
-using System;
 
 public enum ItemEffect
 {
@@ -27,4 +26,6 @@ public class BasicItem : ScriptableObject
 
     public ItemEffect effect;
     public int effectValue = 1;
+    
+    public int price;
 }

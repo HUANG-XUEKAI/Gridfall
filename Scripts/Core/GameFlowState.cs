@@ -5,6 +5,7 @@ public enum GameFlowState
     Prepare = 2,
     GamePlay = 3,
     GameOver = 4,
+    Shopping = 5,
 }
 
 /*public enum UIScreenType

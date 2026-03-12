@@ -9,6 +9,7 @@ public class ItemSlot : MonoBehaviour
     [SerializeField] private Image iconImage;
     [SerializeField] private bool showQuantity = true;
     [SerializeField] private TextMeshProUGUI quantityText;
+    [SerializeField] private TextMeshProUGUI priceText;
 
     public BasicItem Item { get; private set; }
     public event Action<ItemSlot> OnSlotClicked;
@@ -60,6 +61,14 @@ public class ItemSlot : MonoBehaviour
         {
             if (showQuantity && hasItem)
                 quantityText.text = Item.quantity.ToString();
+            else
+                quantityText.text = "";
+        }
+
+        if (priceText != null)
+        {
+            if (hasItem)
+                priceText.text = Item.price.ToString();
             else
                 quantityText.text = "";
         }

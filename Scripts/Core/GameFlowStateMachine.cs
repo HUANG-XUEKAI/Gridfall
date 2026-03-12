@@ -1,4 +1,3 @@
-using System;
 using System.Linq;
 using UnityEngine;
 
@@ -102,6 +101,11 @@ public class GameFlowStateMachine : MonoBehaviour
                 EnterGameOver();
                 break;
             }
+            case GameFlowState.Shopping:
+            {
+                EnterShopping();
+                break;
+            }
         }
     }
     
@@ -146,6 +150,11 @@ public class GameFlowStateMachine : MonoBehaviour
         boardManager.StopSpawning();
     }
 
+    private void EnterShopping()
+    {
+        
+    }
+
     private void ExitState(GameFlowState state)
     {
         switch (state)
@@ -168,6 +177,11 @@ public class GameFlowStateMachine : MonoBehaviour
             case GameFlowState.GameOver:
             {
                 ExitGameOver();
+                break;
+            }
+            case GameFlowState.Shopping:
+            {
+                ExitShopping();
                 break;
             }
         }
@@ -212,6 +226,11 @@ public class GameFlowStateMachine : MonoBehaviour
         }
 
         MDC.ClearCarriedItems();
+    }
+    
+    private void ExitShopping()
+    {
+        
     }
 
     public bool IsInState(GameFlowState state) => CurrentState == state;

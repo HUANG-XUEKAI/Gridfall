@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class ItemDisplay : MonoBehaviour
 {
@@ -20,9 +21,11 @@ public class ItemDisplay : MonoBehaviour
     [SerializeField] private ItemSlot[] carrySlotsInGame = new ItemSlot[MatchData.MaxCarriedCount]; //先不管
     
     [Header("Shopping")]
+    [SerializeField] private ItemSlot[] itemSlotsInShopping1;
     
     [Header("Prefabs")]
     [SerializeField] private ItemSlot itemSlotPrefab;
+    [SerializeField] private PurchasePopup purchasePopup;
     
     private AccountDataCenter ADC => AccountDataCenter.Instance;
     private MatchDataCenter MDC => MatchDataCenter.Instance;
@@ -89,6 +92,12 @@ public class ItemDisplay : MonoBehaviour
                 UpdateGamePlaySlotsDisplay();
                 break;
             }
+            case GameFlowState.Shopping:
+            {
+                FillInSlotsInShopping();
+                RegisterShoppingSlotsEvent();
+                break;
+            }
         }
     }
 
@@ -106,6 +115,12 @@ public class ItemDisplay : MonoBehaviour
             {
                 UnregisterGamePlaySlotsEvent();
                 return;
+            }
+            case GameFlowState.Shopping:
+            {
+                ClearSlotsInShopping();
+                UnregisterShoppingSlotsEvent();
+                break;
             }
         }
     }
@@ -428,6 +443,42 @@ public class ItemDisplay : MonoBehaviour
         }
 
         return -1;
+    }
+    #endregion
+
+    #region Shopping
+    void RegisterShoppingSlotsEvent()
+    {
+        foreach (var slot in itemSlotsInShopping1)
+        {
+            if (slot == null) continue;
+            slot.OnSlotClicked -= HandleShoppingSlotClicked;
+            slot.OnSlotClicked += HandleShoppingSlotClicked;
+        }
+    }
+
+    void UnregisterShoppingSlotsEvent()
+    {
+        foreach (var slot in itemSlotsInShopping1)
+        {
+            if (slot == null) continue;
+            slot.OnSlotClicked -= HandleShoppingSlotClicked;
+        }
+    }
+
+    private void FillInSlotsInShopping()
+    {
+        // 将 ItemManager.Instance.itemsDatabase 里的所有 Item 按顺序填入 itemSlotsInShopping
+    }
+
+    private void ClearSlotsInShopping()
+    {
+        // 清理货架
+    }
+
+    void HandleShoppingSlotClicked(ItemSlot item)
+    {
+        // 实例化出一个 purchasePopup 把 item 传进去
     }
     #endregion
     

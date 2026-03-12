@@ -8,6 +8,7 @@ public class UIStateController : MonoBehaviour
     [SerializeField] private CanvasGroup gameInterface;
     [SerializeField] private CanvasGroup gameOverPanel;
     [SerializeField] private CanvasGroup pausePanel;
+    [SerializeField] private CanvasGroup shopInterface;
     
     private void Awake()
     {
@@ -62,6 +63,11 @@ public class UIStateController : MonoBehaviour
                 Hide(gameOverPanel);
                 break;
             }
+            case GameFlowState.Shopping:
+            {
+                Hide(shopInterface);
+                break;
+            }
         }
     }
 
@@ -87,6 +93,11 @@ public class UIStateController : MonoBehaviour
             case GameFlowState.GameOver:
             {
                 Show(gameOverPanel);
+                break;
+            }
+            case GameFlowState.Shopping:
+            {
+                Show(shopInterface);
                 break;
             }
         }
