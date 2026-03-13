@@ -8,6 +8,7 @@ public class ItemSlot : MonoBehaviour
     [SerializeField] private Button button;
     [SerializeField] private Image iconImage;
     [SerializeField] private bool showQuantity = true;
+    [SerializeField] private bool showPrice = false;
     [SerializeField] private TextMeshProUGUI quantityText;
     [SerializeField] private TextMeshProUGUI priceText;
 
@@ -16,6 +17,7 @@ public class ItemSlot : MonoBehaviour
 
     private void Awake()
     {
+        RefreshView();
         if (button != null)
             button.onClick.AddListener(HandleClick);
     }
@@ -67,10 +69,10 @@ public class ItemSlot : MonoBehaviour
 
         if (priceText != null)
         {
-            if (hasItem)
+            if (showPrice && hasItem)
                 priceText.text = Item.price.ToString();
             else
-                quantityText.text = "";
+                priceText.text = "";
         }
 
         if (button != null)

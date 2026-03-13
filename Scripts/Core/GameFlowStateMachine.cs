@@ -236,6 +236,7 @@ public class GameFlowStateMachine : MonoBehaviour
     public bool IsInState(GameFlowState state) => CurrentState == state;
     
     public void RequestPrepareGame() => ChangeState(GameFlowState.Prepare);
+    public void RequestShopping() => ChangeState(GameFlowState.Shopping);
     public void RequestStartGame()
     {
         bool energyEnough = AccountDataCenter.Instance.CostEnergy(1);

@@ -11,10 +11,6 @@ public class AccountDataCenter : MonoBehaviour
     public PlayerAccountData.InventoryData Inventory { get; private set; } = new();
     public PlayerAccountData.ProgressData Progress { get; private set; } = new();
     
-    // 测试用
-    public BasicItem initialItem;
-    public BasicItem initialItem2;
-
     private void Awake()
     {
         if (Instance != null && Instance != this)
@@ -85,18 +81,10 @@ public class AccountDataCenter : MonoBehaviour
         AccountData.profile.playerId = "LocalPlayer";
         AccountData.profile.playerName = "Player";
         AccountData.profile.energy = 20;
-        AccountData.profile.gold = 0;
-        AccountData.profile.diamond = 0;
+        AccountData.profile.gold = 9999;
+        AccountData.profile.diamond = 999;
         AccountData.profile.bestScore = 0;
         AccountData.profile.tutorialFinished = false;
-
-        // 测试用
-        BasicItem item = Instantiate(initialItem);
-        BasicItem item2 = Instantiate(initialItem2);
-        item.quantity = 99;
-        item2.quantity = 99;
-        AccountData.inventory.ownedItems.Add(item);
-        AccountData.inventory.ownedItems.Add(item2);
         
         Profile = AccountData.profile;
         Inventory = AccountData.inventory;
@@ -154,7 +142,7 @@ public class AccountDataCenter : MonoBehaviour
         return true;
     }
 
-    public void AddGold(int amount)
+    public void EarnGold(int amount)
     {
         if (amount <= 0) return;
 
@@ -212,8 +200,14 @@ public class AccountDataCenter : MonoBehaviour
 
     public bool CostItem(BasicItem item, int amount)
     {
-        if (Inventory == null || Inventory.ownedItems == null) return false;
-        if (item == null || string.IsNullOrEmpty(item.itemId) || amount <= 0) return false;
+        if (Inventory == null || 
+            Inventory.ownedItems == null) 
+            return false;
+        
+        if (item == null || 
+            string.IsNullOrEmpty(item.itemId) || 
+            amount <= 0) 
+            return false;
 
         for (int i = 0; i < Inventory.ownedItems.Count; i++)
         {
@@ -235,6 +229,24 @@ public class AccountDataCenter : MonoBehaviour
         }
 
         return false;
+    }
+
+    public BasicItem FindOwnedItem(string itemId)
+    {
+        if (Inventory == null || 
+            Inventory.ownedItems == null) 
+            return null;
+        
+        if (string.IsNullOrEmpty(itemId)) 
+            return null;
+
+        foreach (var i in Inventory.ownedItems)
+        {
+            if (i != null && i.itemId == itemId)
+                return i;
+        }
+        
+        return null;
     }
 
     public void ResetInventory(List<BasicItem> items)

@@ -204,7 +204,7 @@ MonoBehaviour:
       m_Calls: []
   m_Sprite: {fileID: 0}
   m_Type: 0
-  m_PreserveAspect: 0
+  m_PreserveAspect: 1
   m_FillCenter: 1
   m_FillMethod: 4
   m_FillAmount: 1
@@ -427,6 +427,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   button: {fileID: 3601616014521867336}
   iconImage: {fileID: 1617560537617203452}
-  showQuantity: 1
+  showQuantity: 0
+  showPrice: 1
   quantityText: {fileID: 0}
   priceText: {fileID: 7955206627109285316}

@@ -23,10 +23,11 @@ public class ItemDisplay : MonoBehaviour
     [Header("Shopping")]
     [SerializeField] private ItemSlot[] itemSlotsInShopping1;
     [SerializeField] private CanvasGroup shoppingPage1Root;
+    //private PurchasePopup purchasePopup;
     
     [Header("Prefabs")]
     [SerializeField] private ItemSlot itemSlotPrefab;
-    [SerializeField] private PurchasePopup purchasePopup;
+    [SerializeField] private PurchasePopup purchasePopupPrefab;
     
     private AccountDataCenter ADC => AccountDataCenter.Instance;
     private MatchDataCenter MDC => MatchDataCenter.Instance;
@@ -69,8 +70,8 @@ public class ItemDisplay : MonoBehaviour
     
     private void BuildInventoryDisplay(GameFlowState oldState, GameFlowState newState)
     {
-        EnterNewState(newState);
         ExitOldState(oldState);
+        EnterNewState(newState);
     }
 
     void EnterNewState(GameFlowState newState)
@@ -87,7 +88,6 @@ public class ItemDisplay : MonoBehaviour
             }
             case GameFlowState.GamePlay:
             {
-                ApplyCarried();
                 RegisterGamePlaySlotsEvent();
                 FillInSlotsInGame();
                 UpdateGamePlaySlotsDisplay();
@@ -351,6 +351,9 @@ public class ItemDisplay : MonoBehaviour
 
     void ClearPrepareData()
     {
+        if (GameFlowStateMachine.Instance.CurrentState == GameFlowState.GamePlay)
+            ApplyCarried();
+        
         inventoryForDisplay = null;
         
         foreach (var slot in inventorySlotsInPrepare1)
@@ -469,17 +472,48 @@ public class ItemDisplay : MonoBehaviour
 
     private void FillInSlotsInShopping()
     {
-        // 将 ItemManager.Instance.itemsDatabase 里的所有 Item 按顺序填入 itemSlotsInShopping
+        SetPageVisible(shoppingPage1Root, true);
+        
+        if (ItemManager.Instance == null) return;
+        if (ItemManager.Instance.ItemsDatabase == null) return;
+        
+        int fillCount = Mathf.Min(itemSlotsInShopping1.Length, ItemManager.Instance.ItemsDatabase.Count);
+        for (int i = 0; i < fillCount; i++)
+        {
+            BasicItem item = ItemManager.Instance.ItemsDatabase[i];
+            
+            if (itemSlotsInShopping1[i] == null ||
+                item == null || 
+                string.IsNullOrEmpty(item.itemId)) 
+                continue;
+
+            BasicItem displayItem = Instantiate(item);
+            displayItem.quantity = 1;
+            itemSlotsInShopping1[i].Bind(displayItem);
+        }
     }
 
     private void ClearSlotsInShopping()
     {
-        // 清理货架
+        SetPageVisible(shoppingPage1Root, false);
+
+        foreach (var slot in itemSlotsInShopping1)
+        {
+            slot.SetEmpty();
+        }
     }
 
-    void HandleShoppingSlotClicked(ItemSlot item)
+    void HandleShoppingSlotClicked(ItemSlot slot)
     {
-        // 实例化出一个 purchasePopup 把 item 传进去
+        if (slot == null ||
+            slot.Item == null ||
+            purchasePopupPrefab == null)
+            return;
+        
+        if (ADC == null || ADC.Profile == null) return;
+        
+        var purchasePopup = Instantiate(purchasePopupPrefab, shoppingPage1Root.transform.parent);
+        purchasePopup.Set(slot.Item);
     }
     #endregion
     

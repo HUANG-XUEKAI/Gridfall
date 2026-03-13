@@ -8,7 +8,7 @@ public class ItemManager : MonoBehaviour
     [SerializeField] private BasicItem[] itemsDatabase;
     
     private Dictionary<string, BasicItem> dict_ItemsDB;
-    
+    public IReadOnlyList<BasicItem> ItemsDatabase => itemsDatabase;
     private AccountDataCenter ADC => AccountDataCenter.Instance;
     private MatchDataCenter MDC => MatchDataCenter.Instance;
     

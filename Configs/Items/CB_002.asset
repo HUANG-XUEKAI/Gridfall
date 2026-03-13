@@ -22,3 +22,4 @@ MonoBehaviour:
   maximumQuantity: 999
   effect: 2
   effectValue: 1
+  price: 200

@@ -2618,9 +2618,9 @@ RectTransform:
   - {fileID: 1315403221}
   m_Father: {fileID: 909536984}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 375, y: -838.1999}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 325.1, y: 70.6}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &456836546
@@ -3078,9 +3078,9 @@ RectTransform:
   - {fileID: 1797374887}
   m_Father: {fileID: 909536984}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 375, y: -495.8}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 325.1, y: 70.6}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &486069976
@@ -3212,9 +3212,9 @@ RectTransform:
   - {fileID: 866570165}
   m_Father: {fileID: 909536984}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 375, y: -752.5999}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 325.1, y: 70.6}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &509221160
@@ -4010,9 +4010,9 @@ RectTransform:
   - {fileID: 1801852653}
   m_Father: {fileID: 909536984}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 375, y: -666.99994}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 325.1, y: 70.6}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &641714823
@@ -6053,7 +6053,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 961422059}
         m_TargetAssemblyTypeName: GameFlowStateMachine, Assembly-CSharp
-        m_MethodName: RequestStartGame
+        m_MethodName: RequestBackMainMenu
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -6872,7 +6872,7 @@ MonoBehaviour:
   gameInterface: {fileID: 1822598839}
   gameOverPanel: {fileID: 1497709125}
   pausePanel: {fileID: 520054223}
-  shopInterface: {fileID: 0}
+  shopInterface: {fileID: 1485623251}
 --- !u!1 &1315403220
 GameObject:
   m_ObjectHideFlags: 0
@@ -7156,8 +7156,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6b5ec8b27a367414a96fe633849728cc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  initialItem: {fileID: 11400000, guid: c11e80c6c82b9f34ba75f71b4d19b6a6, type: 2}
-  initialItem2: {fileID: 11400000, guid: 78fa89a57e3812e47ae0a70c4d2f9a70, type: 2}
 --- !u!4 &1357717519
 Transform:
   m_ObjectHideFlags: 0
@@ -10361,9 +10359,9 @@ RectTransform:
   - {fileID: 593590938}
   m_Father: {fileID: 909536984}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 375, y: -581.39996}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 325.1, y: 70.6}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1841091836
@@ -10412,7 +10410,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 961422059}
         m_TargetAssemblyTypeName: GameFlowStateMachine, Assembly-CSharp
-        m_MethodName: 
+        m_MethodName: RequestShopping
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -10541,7 +10539,7 @@ MonoBehaviour:
   - {fileID: 1886568964}
   shoppingPage1Root: {fileID: 1651398559}
   itemSlotPrefab: {fileID: 4362316667484692500, guid: 24c4e54a39763f342b276cc60025b689, type: 3}
-  purchasePopup: {fileID: 0}
+  purchasePopupPrefab: {fileID: 4685047091177959320, guid: 51b9090e96c0ce44ebc5be3619953552, type: 3}
 --- !u!4 &1850083896
 Transform:
   m_ObjectHideFlags: 0
@@ -10875,7 +10873,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1947363000
 RectTransform:
   m_ObjectHideFlags: 0
