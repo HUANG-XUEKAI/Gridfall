@@ -23,9 +23,9 @@ public class EventDebugListener : MonoBehaviour
         Debug.Log($"[Event] CardPlayed: {e.pattern}");
     }
 
-    private void OnHPChanged(GameEvents.HPChangedEvent e)
+    private void OnHPChanged(GameEvents.ChangeData e)
     {
-        Debug.Log($"[Event] HPChanged: {e.currentHP}, delta={e.delta}");
+        Debug.Log($"[Event] HPChanged: {e.currValue}, delta={e.delta}");
     }
     
     private void OnGameOver(GameEvents.GameOverEvent e)

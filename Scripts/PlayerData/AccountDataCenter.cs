@@ -26,7 +26,7 @@ public class AccountDataCenter : MonoBehaviour
     private void Start()
     {
         BuildRuntimeInventoryFromJson();
-        NotifyProfileLoaded();
+        //NotifyProfileLoaded();
     }
     
     private void BuildRuntimeInventoryFromJson()
@@ -96,7 +96,7 @@ public class AccountDataCenter : MonoBehaviour
         SaveAccount();
     }
 
-    private void RaiseProfileChanged()
+    /*private void RaiseProfileChanged()
     {
         GameEvents.RaiseProfileChanged(new GameEvents.ProfileChangedEvent
         {
@@ -104,71 +104,111 @@ public class AccountDataCenter : MonoBehaviour
             gold = Profile.gold,
             diamond = Profile.diamond
         });
-    }
+    }*/
 
     public void NotifyProfileLoaded()
     {
-        RaiseProfileChanged();
+        
+    }
+    
+    public bool TryUpdateBestScore(int score)
+    {
+        if (score <= Profile.bestScore)
+            return false;
+
+        Profile.bestScore = score;
+        SaveProfile();
+        return true;
     }
 
-    public bool CostEnergy(int amount)
+    public bool CostEnergy(int amount, string reason = "")
     {
         if (amount <= 0) return true;
         if (Profile.energy < amount) return false;
 
         Profile.energy -= amount;
         SaveProfile();
-        RaiseProfileChanged();
+        GameEvents.RaiseEnergyChanged(new GameEvents.ChangeData
+        {  
+            currValue = Profile.energy,
+            delta = amount,
+            reason = reason
+        });
         return true;
     }
 
-    public void AddEnergy(int amount)
+    public void AddEnergy(int amount, string reason = "")
     {
         if (amount <= 0) return;
 
         Profile.energy += amount;
         SaveProfile();
-        RaiseProfileChanged();
+        GameEvents.RaiseEnergyChanged(new GameEvents.ChangeData
+        {  
+            currValue = Profile.energy,
+            delta = amount,
+            reason = reason
+        });
     }
 
-    public bool CostGold(int amount)
+    public bool CostGold(int amount, string reason = "")
     {
         if (amount <= 0) return true;
         if (Profile.gold < amount) return false;
 
         Profile.gold -= amount;
         SaveProfile();
-        RaiseProfileChanged();
+        GameEvents.RaiseGoldChanged(new GameEvents.ChangeData
+        {  
+            currValue = Profile.gold,
+            delta = amount,
+            reason = reason
+        });
         return true;
     }
 
-    public void EarnGold(int amount)
+    public void EarnGold(int amount, string reason = "")
     {
         if (amount <= 0) return;
 
         Profile.gold += amount;
         SaveProfile();
-        RaiseProfileChanged();
+        GameEvents.RaiseGoldChanged(new GameEvents.ChangeData
+        {  
+            currValue = Profile.gold,
+            delta = amount,
+            reason = reason
+        });
     }
 
-    public bool CostDiamond(int amount)
+    public bool CostDiamond(int amount, string reason = "")
     {
         if (amount <= 0) return true;
         if (Profile.diamond < amount) return false;
 
         Profile.diamond -= amount;
         SaveProfile();
-        RaiseProfileChanged();
+        GameEvents.RaiseDiamondChanged(new GameEvents.ChangeData
+        {  
+            currValue = Profile.diamond,
+            delta = amount,
+            reason = reason
+        });
         return true;
     }
 
-    public void AddDiamond(int amount)
+    public void AddDiamond(int amount, string reason = "")
     {
         if (amount <= 0) return;
 
         Profile.diamond += amount;
         SaveProfile();
-        RaiseProfileChanged();
+        GameEvents.RaiseDiamondChanged(new GameEvents.ChangeData
+        {  
+            currValue = Profile.diamond,
+            delta = amount,
+            reason = reason
+        });
     }
     
     public bool AddItem(BasicItem item, int amount)

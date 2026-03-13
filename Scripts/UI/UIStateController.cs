@@ -9,6 +9,7 @@ public class UIStateController : MonoBehaviour
     [SerializeField] private CanvasGroup gameOverPanel;
     [SerializeField] private CanvasGroup pausePanel;
     [SerializeField] private CanvasGroup shopInterface;
+    [SerializeField] private CanvasGroup rankPanel;
     
     private void Awake()
     {
@@ -46,6 +47,7 @@ public class UIStateController : MonoBehaviour
             case GameFlowState.MainMenu:
             {
                 Hide(mainMenu);
+                Hide(rankPanel);
                 break;
             }
             case GameFlowState.Prepare:
@@ -111,8 +113,17 @@ public class UIStateController : MonoBehaviour
         Hide(preparePanel);
         Hide(gameInterface);
         Hide(gameOverPanel);
+        Hide(rankPanel);
     }
 
+    public void ShowRankPanel()
+    {
+        rankPanel.GetComponent<RankPanelUI>().RefreshView();
+        Show(rankPanel);
+    }
+    
+    public void HideRankPanel() => Hide(rankPanel);
+    
     private void SetPausePanelVisible(bool visible)
     {
         if (visible)

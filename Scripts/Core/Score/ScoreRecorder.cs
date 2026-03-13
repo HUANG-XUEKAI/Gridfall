@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class ScoreSystem : MonoBehaviour
+public class ScoreRecorder : MonoBehaviour
 {
     [SerializeField] private ScoreConfig scoreConfig;
     
@@ -35,9 +35,8 @@ public class ScoreSystem : MonoBehaviour
 
     private void OnGameOver(GameEvents.GameOverEvent e)
     {
-        if (MDC.CurrentMatch.currentScore > ADC.Profile.bestScore)
+        if (ADC.TryUpdateBestScore(MDC.CurrentMatch.currentScore))
         {
-            ADC.Profile.bestScore = MDC.CurrentMatch.currentScore;
             Debug.Log($"新纪录：{ADC.Profile.bestScore}");
         }
 

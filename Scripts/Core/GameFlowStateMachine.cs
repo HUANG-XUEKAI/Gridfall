@@ -1,4 +1,3 @@
-using System.Linq;
 using UnityEngine;
 
 public class GameFlowStateMachine : MonoBehaviour
@@ -128,8 +127,8 @@ public class GameFlowStateMachine : MonoBehaviour
 
     private void EnterPrepare()
     {
-        MDC.CreatNewMatchData();
-        
+        MDC.ResetScore();
+        MDC.ResetHP();
         boardManager.BuildBoard();
         boardManager.ClearAllBlocks();
     }

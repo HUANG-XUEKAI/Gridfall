@@ -1,6 +1,5 @@
 using System;
 using UnityEngine;
-using System.Linq;
 
 public class MatchDataCenter : MonoBehaviour
 {
@@ -19,7 +18,7 @@ public class MatchDataCenter : MonoBehaviour
         Instance = this;
     }
     
-    public void CreatNewMatchData()
+    /*public void CreatNewMatchData()
     {
         CurrentMatch = new MatchData
         {
@@ -28,13 +27,13 @@ public class MatchDataCenter : MonoBehaviour
             isGaming = false,
             isPausing = false,
         };
-    }
+    }*/
 
     public void StartMatch()
     {
         CurrentMatch.isGaming = true;
         
-        GameEvents.RaiseGameStared(new GameEvents.GameStartedEvent());
+        GameEvents.RaiseGameStared();
     }
 
     public void EndMatch()
@@ -65,14 +64,14 @@ public class MatchDataCenter : MonoBehaviour
         GameEvents.RaiseGamePaused(false);
     }
     
-    public void AddScore(int amount, string reason)
+    public void AddScore(int amount, string reason = "")
     {
         if (amount <= 0) return;
         CurrentMatch.currentScore += amount;
         
-        GameEvents.RaiseScoreChanged(new GameEvents.ScoreChangedEvent
+        GameEvents.RaiseScoreChanged(new GameEvents.ChangeData
         {
-            currentScore = CurrentMatch.currentScore,
+            currValue = CurrentMatch.currentScore,
             delta = amount,
             reason = reason
         });
@@ -82,15 +81,15 @@ public class MatchDataCenter : MonoBehaviour
     {
         CurrentMatch.currentScore = 0;
         
-        GameEvents.RaiseScoreChanged(new GameEvents.ScoreChangedEvent
+        GameEvents.RaiseScoreChanged(new GameEvents.ChangeData
         {
-            currentScore = 0,
+            currValue = 0,
             delta = 0,
             reason = "Reset"
         });
     }
 
-    public void TakeDamage(int amount)
+    public void TakeDamage(int amount, string reason = "")
     {
         if (amount <= 0 || !CurrentMatch.isGaming) return;
 
@@ -105,14 +104,15 @@ public class MatchDataCenter : MonoBehaviour
             EndMatch();
         }
         
-        GameEvents.RaiseHPChanged(new GameEvents.HPChangedEvent
+        GameEvents.RaiseHPChanged(new GameEvents.ChangeData
         {
-            currentHP = CurrentMatch.currentHP,
-            delta = delta
+            currValue = CurrentMatch.currentHP,
+            delta = delta,
+            reason = reason
         });
     }
 
-    public void AddHP(int amount)
+    public void AddHP(int amount, string reason = "")
     {
         if (amount <= 0) return;
 
@@ -123,13 +123,25 @@ public class MatchDataCenter : MonoBehaviour
         );
         int delta = CurrentMatch.currentHP - oldHP;
         
-        GameEvents.RaiseHPChanged(new GameEvents.HPChangedEvent
+        GameEvents.RaiseHPChanged(new GameEvents.ChangeData
         {
-            currentHP = CurrentMatch.currentHP,
-            delta = delta
+            currValue = CurrentMatch.currentHP,
+            delta = delta,
+            reason = reason,
         });
     }
-    
+
+    public void ResetHP()
+    {
+        CurrentMatch.currentHP = MatchData.DefaultHP;
+        
+        GameEvents.RaiseHPChanged(new GameEvents.ChangeData
+        {
+            currValue = CurrentMatch.currentHP,
+            delta = 0,
+            reason = "Reset",
+        });
+    }
     
     public void ClearCarriedItems()
     {
