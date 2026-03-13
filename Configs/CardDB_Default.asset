@@ -13,8 +13,4 @@ MonoBehaviour:
   m_Name: CardDB_Default
   m_EditorClassIdentifier: 
   patternDatabase: {fileID: 11400000, guid: c0ff2d7ada104e54fafc3a2c77a5678a, type: 2}
-  normalCardTemplate: {fileID: 11400000, guid: 78e430d59549d7f43a028a622f0828a3, type: 2}
-  specialCards:
-  - {fileID: 11400000, guid: beda4f00ac12dee40a4bd902b2009750, type: 2}
-  allowSpecialCards: 1
-  specialDrawChance: 0.1
+  basicCardTemplate: {fileID: 11400000, guid: 78e430d59549d7f43a028a622f0828a3, type: 2}

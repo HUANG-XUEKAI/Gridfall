@@ -25,7 +25,7 @@ public static class HandEvaluator
 
         for (int i = 0; i < normalCards.Count; i++)
         {
-            var pattern = normalCards[i].GetNormalPattern();
+            var pattern = normalCards[i].Card.pattern;
             if (pattern == null) continue;
 
             if (!counts.ContainsKey(pattern))
@@ -48,7 +48,7 @@ public static class HandEvaluator
         if (normalCards.Count == 4 && counts.Count == 4)
         {
             result.pattern = CardPattern.Rainbow;
-            result.activePattern = normalCards[0].GetNormalPattern(); // Rainbow 实际不依赖 shape，给个占位即可
+            result.activePattern = normalCards[0].Card.pattern; // Rainbow 实际不依赖 shape，给个占位即可
             return result;
         }
 

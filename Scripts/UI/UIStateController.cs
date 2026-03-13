@@ -106,6 +106,7 @@ public class UIStateController : MonoBehaviour
     private void HideAll()
     {
         Hide(mainMenu);
+        Hide(shopInterface);
         Hide(pausePanel);
         Hide(preparePanel);
         Hide(gameInterface);

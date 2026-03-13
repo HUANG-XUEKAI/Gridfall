@@ -48,7 +48,7 @@ public class HandManager : MonoBehaviour
     
     private void Awake()
     {
-        cardDB.InitializeNormalCards();
+        cardDB.InitializeBasicCards();
         RefreshPlayButtonUI();
         RefreshLineModeUI();
     }
@@ -88,26 +88,10 @@ public class HandManager : MonoBehaviour
             if (selectedCards.Count == 0) return;
 
             currentPlayContext = BuildPlayContext();
-
-            bool hasBase = currentPlayContext.HasBaseEffect;
-            bool hasSpecial = currentPlayContext.HasSpecialEffect;
-
-            if (!hasBase && !hasSpecial)
-                return;
-
+            
             currentPattern = currentPlayContext.basePattern;
             activePattern = currentPlayContext.activePattern;
-
-            // 只有特殊牌、没有基础牌：直接执行特殊效果
-            if (!hasBase && hasSpecial)
-            {
-                ExecuteSpecialEffects(currentPlayContext, new Vector2Int(-1, -1));
-                ConsumeSelectedCards();
-                RefillToHandSize();
-                RefreshPlayButtonUI();
-                return;
-            }
-
+            
             aiming = true;
 
             aimMode = currentPattern switch
@@ -142,11 +126,9 @@ public class HandManager : MonoBehaviour
                     {
                         pattern = currentPlayContext != null ? currentPlayContext.basePattern : CardPattern.None,
                         activeShape = currentPlayContext != null ? currentPlayContext.activePattern : null,
-                        normalCardCount = currentPlayContext != null ? currentPlayContext.normalCards.Count : 0,
-                        specialCardCount = currentPlayContext != null ? currentPlayContext.specialCards.Count : 0
+                        cardCount = currentPlayContext != null ? currentPlayContext.selectedCards.Count : 0,
                     });
-
-                    ExecuteSpecialEffects(currentPlayContext, new Vector2Int(-1, -1));
+                    
                     ConsumeSelectedCards();
                     RefillToHandSize();
                 }
@@ -217,19 +199,8 @@ public class HandManager : MonoBehaviour
     {
         while (cards.Count < handSize)
         {
-            BasicCard card = null;
+            BasicCard card = cardDB.GetCardRandom();
             
-            if (cardDB.AllowSpecialCards)
-            {
-                card = cardDB.GetSpecialCardRandom();
-                if (card == null)
-                    card = cardDB.GetNormalCardRandom();
-            }
-            else
-            {
-                card = cardDB.GetNormalCardRandom();
-            }
-
             if (card == null)
                 break;
             
@@ -240,33 +211,6 @@ public class HandManager : MonoBehaviour
         }
     }
     
-    private void ExecuteSpecialEffects(PlayContext ctx, Vector2Int targetCell)
-    {
-        if (ctx == null) return;
-
-        var effectContext = new CardEffectContext
-        {
-            board = boardMG,
-            //gameManager = gameMG,
-            targetCell = targetCell
-        };
-
-        foreach (var cv in ctx.specialCards)
-        {
-            var effect = cv.Effect;
-            if (effect != null)
-            {
-                effect.Execute(effectContext);
-
-                GameEvents.RaiseEffectExecuted(new GameEvents.SpecialEffectEvent
-                {
-                    sourceCard = cv.Card,
-                    effectName = effect.name
-                });
-            }
-        }
-    }
-    
     private PlayContext BuildPlayContext()
     {
         var ctx = new PlayContext();
@@ -274,12 +218,9 @@ public class HandManager : MonoBehaviour
         foreach (var card in selectedCards)
         {
             ctx.selectedCards.Add(card);
-
-            if (card.IsSpecial) ctx.specialCards.Add(card);
-            else ctx.normalCards.Add(card);
         }
 
-        var evalResult = HandEvaluator.Evaluate(ctx.normalCards);
+        var evalResult = HandEvaluator.Evaluate(ctx.selectedCards);
         ctx.basePattern = evalResult.pattern;
         ctx.activePattern = evalResult.activePattern;
 
@@ -440,17 +381,11 @@ public class HandManager : MonoBehaviour
     
     private void AfterSuccessfulPlay(int x, int y)
     {
-        if (currentPlayContext != null && currentPlayContext.HasSpecialEffect)
-        {
-            ExecuteSpecialEffects(currentPlayContext, new Vector2Int(x, y));
-        }
-        
         GameEvents.RaiseCardPlayed(new GameEvents.CardPlayedEvent
         {
             pattern = currentPlayContext != null ? currentPlayContext.basePattern : CardPattern.None,
             activeShape = currentPlayContext != null ? currentPlayContext.activePattern : null,
-            normalCardCount = currentPlayContext != null ? currentPlayContext.normalCards.Count : 0,
-            specialCardCount = currentPlayContext != null ? currentPlayContext.specialCards.Count : 0
+            cardCount = currentPlayContext != null ? currentPlayContext.selectedCards.Count : 0,
         });
 
         ConsumeSelectedCards();

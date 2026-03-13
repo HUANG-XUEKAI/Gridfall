@@ -142,7 +142,7 @@ public class GameFlowStateMachine : MonoBehaviour
         boardManager.StartSpawning();
         boardManager.ClearAllHighlights();
         
-        Debug.Log(string.Join(", ", ADC.Inventory.ownedItems.Select(x => x.itemId)));
+        //Debug.Log(string.Join(", ", ADC.Inventory.ownedItems.Select(x => x.itemId)));
     }
     
     private void EnterGameOver()

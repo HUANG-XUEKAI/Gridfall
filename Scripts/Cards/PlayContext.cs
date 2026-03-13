@@ -13,12 +13,8 @@ public enum CardPattern
 public class PlayContext
 {
     public readonly List<CardView> selectedCards = new();
-    public readonly List<CardView> normalCards = new();
-    public readonly List<CardView> specialCards = new();
-
     public CardPattern basePattern = CardPattern.None;
     public BasicPattern activePattern;
 
     public bool HasBaseEffect => basePattern != CardPattern.None;
-    public bool HasSpecialEffect => specialCards.Count > 0;
 }

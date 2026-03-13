@@ -9,15 +9,6 @@ public class CardView : MonoBehaviour
     [SerializeField] private Button button;
     
     public BasicCard Card { get; private set; }
-    public bool IsSpecial => Card is SpecialCard;
-    
-    public BasicPattern GetNormalPattern()
-    {
-        if (!(Card is SpecialCard))
-            return Card.pattern;
-        return null;
-    }
-    public CardEffect Effect => (Card as SpecialCard)?.effect;
     
     [Header("Selection Visual")]
     [SerializeField] private RectTransform visualRoot; // ★新增：只动它！
@@ -63,7 +54,7 @@ public class CardView : MonoBehaviour
         
         Card = card;
         iconImage.enabled = true;
-        iconImage.sprite = card is SpecialCard ? (card as SpecialCard).specialCardImg : card.pattern.sprite;
+        iconImage.sprite = card.pattern.sprite;
         SetSelected(false);
     }
 
