@@ -5,6 +5,7 @@ using UnityEngine;
 public class BasicBlock : ScriptableObject
 {
     public string id;
+    public Sprite bg;
     [NonSerialized] 
     public BasicPattern pattern;
     public int baseScore = 1;
